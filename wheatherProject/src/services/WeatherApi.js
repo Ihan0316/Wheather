@@ -1,11 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const APIKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
 
 export const weatherApi = createApi({
-  reducerPath: "weatherApi",
+  reducerPath: 'weatherApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.openweathermap.org",
+    baseUrl: 'https://api.openweathermap.org',
   }),
   endpoints: (builder) => ({
     getCurrentWeather: builder.query({
@@ -14,7 +14,7 @@ export const weatherApi = createApi({
     }),
     getForecastDaily: builder.query({
       query: ({ lat, lng }) =>
-        `data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=16&units=metric&appid=${APIKey}`,
+        `data/2.5/forecast?lat=${lat}&lon=${lng}&appid=${APIKey}`,
     }),
     getCurrentAirPollution: builder.query({
       query: ({ lat, lng }) =>

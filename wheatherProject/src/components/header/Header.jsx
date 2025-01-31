@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import Location from "./Location";
-import SearchBar from "./SearchBar";
-import ThemeSwitchToggle from "./ThemeSwitchToggle";
+import { Link } from 'react-router-dom';
+import Location from './Location';
+import SearchBar from './SearchBar';
+import ThemeSwitchToggle from './ThemeSwitchToggle';
 
 function Header() {
   return (
@@ -22,7 +22,7 @@ function Header() {
 
         <Link to="forecast">
           <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-            Next 10 days
+            Next 5 days
           </button>
         </Link>
       </div>

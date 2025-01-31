@@ -1,43 +1,43 @@
-import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
-import { saveGeoCode } from "../../features/geolocation/geolocationSlice";
+import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
+import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
 
-import { useDispatch } from "react-redux";
-import City from "./City";
-import { saveLocation } from "../../features/search/searchSlice";
+import { useDispatch } from 'react-redux';
+import City from './City';
+import { saveLocation } from '../../features/search/searchSlice';
 
 function OtherCities() {
   const dispatch = useDispatch();
 
   const cities = [
     {
-      city: "Korea",
-      country: "Busan",
-      geolocation: { lat: "35.1652", lng: "129.043" },
+      city: 'Korea',
+      country: 'Busan',
+      geolocation: { lat: '35.1652', lng: '129.043' },
     },
     {
-      city: "New York",
-      country: "United States",
-      geolocation: { lat: "40.7128", lng: "-74.0060" },
+      city: 'New York',
+      country: 'United States',
+      geolocation: { lat: '40.7128', lng: '-74.0060' },
     },
     {
-      city: "London",
-      country: "United Kingdom",
-      geolocation: { lat: "51.5074", lng: "-0.1278" },
+      city: 'London',
+      country: 'United Kingdom',
+      geolocation: { lat: '51.5074', lng: '-0.1278' },
     },
     {
-      city: "Tokyo",
-      country: "Japan",
-      geolocation: { lat: "35.6895", lng: "139.6917" },
+      city: 'Tokyo',
+      country: 'Japan',
+      geolocation: { lat: '35.6895', lng: '139.6917' },
     },
     {
-      city: "Paris",
-      country: "France",
-      geolocation: { lat: "48.8566", lng: "2.3522" },
+      city: 'Paris',
+      country: 'France',
+      geolocation: { lat: '48.8566', lng: '2.3522' },
     },
     {
-      city: "Singapore",
-      country: "Central Singapore",
-      geolocation: { lat: "1.28333", lng: "103.85" },
+      city: 'Singapore',
+      country: 'Central Singapore',
+      geolocation: { lat: '1.28333', lng: '103.85' },
     },
   ];
 
@@ -55,7 +55,7 @@ function OtherCities() {
       saveGeoCode({
         lat: item.data.coord.lat,
         lng: item.data.coord.lon,
-      })
+      }),
     );
     // save location to redux store
     dispatch(saveLocation(item.data.name, item.data.sys.country));

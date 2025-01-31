@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import React, { useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 function WeatherMap() {
   const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
@@ -14,7 +14,7 @@ function WeatherMap() {
       zoom: 6,
       layers: [
         L.tileLayer(
-          "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+          'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
         ),
       ],
     });
@@ -27,12 +27,12 @@ function WeatherMap() {
 
     // add weather layer to map and apply style to it
     const precipitationLayer = L.tileLayer(
-      "https://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={API_KEY}",
+      'https://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={API_KEY}',
       {
-        op: "PR0",
-        API_KEY: "06d993a12ed23f678bfb54004bb0ad42",
-        attribution: "Map data © OpenWeatherMap contributors",
-      }
+        op: 'PR0',
+        API_KEY: '06d993a12ed23f678bfb54004bb0ad42',
+        attribution: 'Map data © OpenWeatherMap contributors',
+      },
     );
 
     // add precipitation layer to map
