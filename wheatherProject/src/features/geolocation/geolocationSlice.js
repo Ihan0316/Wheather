@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  geolocation: { lat: 35.1652, lng: 129.043 },
+  geolocation: { lat: 37.5665, lng: 126.978 },
 };
 
 const geolocationSlice = createSlice({
-  name: "geolocation",
+  name: 'geolocation',
   initialState,
   reducers: {
     saveGeoCode: (state, action) => {

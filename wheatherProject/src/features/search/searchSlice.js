@@ -1,12 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  searchValue: "",
-  location: "Busan",
+  searchValue: '',
+  location: 'Seoul',
 };
 
 const searchSlice = createSlice({
-  name: "search",
+  name: 'search',
   initialState,
   reducers: {
     updateSearchValue: (state, action) => {
