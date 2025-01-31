@@ -22,7 +22,7 @@ function Header() {
 
         <Link to="forecast">
           <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-            Next 5 days
+            Next 10 days
           </button>
         </Link>
       </div>

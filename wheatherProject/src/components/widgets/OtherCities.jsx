@@ -65,10 +65,18 @@ function OtherCities() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="text-lg font-semibold">Other large cities</div>
+    <div className="flex flex-wrap gap-4">
+      {' '}
+      {/* flex-row에서 flex-wrap으로 변경 */}
+      <div className="w-full text-lg font-semibold">Other large cities</div>
       {data.map((item, i) => (
-        <div key={i} onClick={() => handleClick(item)}>
+        <div
+          key={i}
+          onClick={() => handleClick(item)}
+          className="flex w-1/3 flex-col gap-4"
+        >
+          {' '}
+          {/* 각 항목을 1/3 너비로 설정 */}
           <City
             city={cities[i].city}
             country={cities[i].country}

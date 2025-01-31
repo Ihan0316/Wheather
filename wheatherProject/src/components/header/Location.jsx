@@ -1,5 +1,5 @@
-import { MapPinIcon } from "@heroicons/react/24/outline";
-import { useSelector } from "react-redux";
+import { MapPinIcon } from '@heroicons/react/24/outline';
+import { useSelector } from 'react-redux';
 
 function Location() {
   const selectedLocation = useSelector((state) => state.search.location);
