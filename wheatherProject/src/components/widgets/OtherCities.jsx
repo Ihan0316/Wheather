@@ -41,7 +41,7 @@ function OtherCities() {
     {
       city: 'Sydney',
       country: 'Australia',
-      geolocation: { lat: '33.8688', lng: '151.2093' },
+      geolocation: { lat: '-33.8688', lng: '151.2093' },
     },
     {
       city: 'Los Angeles',
