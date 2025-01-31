@@ -79,25 +79,28 @@ function OtherCities() {
   };
 
   return (
-    <div className="flex flex-wrap gap-4">
-      {' '}
-      {/* flex-row에서 flex-wrap으로 변경 */}
-      <div className="w-full text-lg font-semibold">Other large cities</div>
-      {data.map((item, i) => (
-        <div
-          key={i}
-          onClick={() => handleClick(item)}
-          className="flex w-1/4 flex-col gap-4"
-        >
-          {' '}
-          <City
-            city={cities[i].city}
-            country={cities[i].country}
-            data={item.data}
-          />
+    <main className="container mx-auto">
+      <div className="flex flex-col md:flex-row">
+        <div className="p-6 sm:p-0 md:w-full">
+          <div className="mb-4 text-lg font-semibold">Other large cities</div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {data.map((item, i) => (
+              <div
+                key={i}
+                onClick={() => handleClick(item)}
+                className="flex flex-col gap-4 rounded-md p-2 shadow-md" // shadow 추가, border 제거
+              >
+                <City
+                  city={cities[i].city}
+                  country={cities[i].country}
+                  data={item.data}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
+      </div>
+    </main>
   );
 }
 
