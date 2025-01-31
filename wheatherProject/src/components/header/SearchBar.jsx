@@ -1,103 +1,100 @@
-import { useEffect } from "react";
-import { Combobox } from "@headlessui/react";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from 'react';
+import { Combobox } from '@headlessui/react';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   saveLocation,
   updateSearchValue,
-} from "../../features/search/searchSlice";
-import { saveGeoCode } from "../../features/geolocation/geolocationSlice";
+} from '../../features/search/searchSlice';
+import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 function SearchBar() {
-  const {
-    suggestions: { status, data },
-    setValue,
-  } = usePlacesAutocomplete({
-    callbackName: "",
-    requestOptions: {
-      types: ["(cities)"],
-    },
-    debounce: 300,
-  });
-
+  const [suggestions, setSuggestions] = useState([]);
+  const [inputValue, setInputValue] = useState('');
   const dispatch = useDispatch();
   const selectedValue = useSelector((state) => state.search.searchValue);
 
   const handleInput = (event) => {
-    setValue(event.target.value);
+    const value = event.target.value;
+    setInputValue(value);
+
+    if (value.length > 2) {
+      fetch(
+        `http://api.openweathermap.org/data/2.5/find?q=${value}&type=like&sort=population&cnt=5&appid=${
+          import.meta.env.VITE_API_KEY_OPENWEATHERMAP
+        }`,
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setSuggestions(data.list);
+        });
+    } else {
+      setSuggestions([]);
+    }
   };
 
   const handleChange = (selectedValue) => {
-    const parts = selectedValue.split(",");
+    const parts = selectedValue.split(',');
     const city = parts[0];
     const country = parts[parts.length - 1];
     const cityAndCountry = `${city},${country}`;
     dispatch(updateSearchValue(selectedValue));
     dispatch(saveLocation(cityAndCountry));
+    setInputValue('');
   };
 
   useEffect(() => {
-    selectedValue.length &&
-      getGeocode({ address: selectedValue })
-        .then((results) => {
-          const { lat, lng } = getLatLng(results[0]);
-          dispatch(saveGeoCode({ lat, lng }));
-          dispatch(updateSearchValue(""));
+    if (selectedValue.length) {
+      fetch(
+        `http://api.openweathermap.org/data/2.5/weather?q=${selectedValue}&appid=${
+          import.meta.env.VITE_API_KEY_OPENWEATHERMAP
+        }`,
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const { lat, lon } = data.coord;
+          dispatch(saveGeoCode({ lat, lng: lon }));
         })
         .catch((error) => {
-          console.log("Error: ", error);
+          console.log('Error: ', error);
         });
+    }
   }, [selectedValue, dispatch]);
 
   return (
-    <>
-      <Combobox
-        as="div"
-        onChange={handleChange}
-        value={selectedValue}
-        className="relative w-full max-w-lg"
-        nullable
-      >
-        <div className="relative">
-          <MagnifyingGlassIcon
-            className="pointer-events-none absolute top-2 left-5 h-6 w-6 text-gray-900 text-opacity-40 dark:text-gray-400"
-            aria-hidden="true"
-          />
-          <Combobox.Input
-            type="text"
-            autoComplete="off"
-            onChange={handleInput}
-            placeholder="Search city..."
-            className="w-full rounded-lg bg-neutral-50 py-2.5 pl-14 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
-          />
-        </div>
-        <Combobox.Options className="absolute -mb-2 -mt-1.5 max-h-72 w-full max-w-lg origin-top scroll-py-2 rounded-b-lg bg-white text-sm text-gray-800">
-          {status === "OK" &&
-            data.map(({ place_id, description }) => (
+    <Combobox value={selectedValue} onChange={handleChange}>
+      <div className="relative">
+        <MagnifyingGlassIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+        <Combobox.Input
+          className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-3 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+          onChange={handleInput}
+          value={inputValue}
+          placeholder="Search for a city"
+        />
+        {suggestions.length > 0 && (
+          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            {suggestions.map((suggestion, index) => (
               <Combobox.Option
-                key={place_id}
-                value={description}
+                key={index}
+                value={`${suggestion.name},${suggestion.sys.country}`}
                 className={({ active }) =>
                   classNames(
-                    "cursor-default select-none rounded-lg px-4 py-2",
-                    active && "bg-neutral-200 text-black first:rounded-t-none"
+                    'relative cursor-default select-none py-2 pl-3 pr-9',
+                    active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                   )
                 }
               >
-                {description}
+                {suggestion.name}, {suggestion.sys.country}
               </Combobox.Option>
             ))}
-        </Combobox.Options>
-      </Combobox>
-    </>
+          </Combobox.Options>
+        )}
+      </div>
+    </Combobox>
   );
 }
 

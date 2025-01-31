@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
-import { weatherCodes } from "../../assets/weatherCodes";
+import { useEffect, useState } from 'react';
+import { weatherCodes } from '../../assets/weatherCodes';
 
 const WeatherIcon = ({ iconType, id, size }) => {
   const [path, setPath] = useState(false);
-  const [iconCode, setIconCode] = useState("");
+  const [iconCode, setIconCode] = useState('');
 
   function getIconName(iconType, id) {
     let iconName;
     switch (true) {
-      case iconType.includes("d"):
+      case iconType.includes('d'):
         iconName = weatherCodes.day[id];
         break;
-      case iconType.includes("n"):
+      case iconType.includes('n'):
         iconName = weatherCodes.night[id];
         break;
       default: // set a default value
-        console.log("Invalid icon type");
-        icon = "default-icon";
+        console.log('Invalid icon type');
+        icon = 'default-icon';
         break;
     }
     return iconName;
