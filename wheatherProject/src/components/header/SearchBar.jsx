@@ -66,34 +66,47 @@ function SearchBar() {
   }, [selectedValue, dispatch]);
 
   return (
-    <Combobox value={selectedValue} onChange={handleChange}>
+    <Combobox
+      as="div"
+      onChange={handleChange}
+      value={selectedValue}
+      className="relative w-full max-w-lg"
+      nullable
+    >
       <div className="relative">
-        <MagnifyingGlassIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+        <MagnifyingGlassIcon
+          className="pointer-events-none absolute left-5 top-2 h-6 w-6 text-gray-900 text-opacity-40 dark:text-gray-400"
+          aria-hidden="true"
+        />
         <Combobox.Input
-          className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-3 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+          type="text"
+          autoComplete="off"
           onChange={handleInput}
           value={inputValue}
-          placeholder="Search for a city"
+          placeholder="Search city..."
+          className="w-full rounded-lg bg-neutral-50 py-2.5 pl-14 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
         />
-        {suggestions.length > 0 && (
-          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {suggestions.map((suggestion, index) => (
-              <Combobox.Option
-                key={index}
-                value={`${suggestion.name},${suggestion.sys.country}`}
-                className={({ active }) =>
-                  classNames(
-                    'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                  )
-                }
-              >
-                {suggestion.name}, {suggestion.sys.country}
-              </Combobox.Option>
-            ))}
-          </Combobox.Options>
-        )}
       </div>
+      {suggestions.length > 0 && (
+        <Combobox.Options className="absolute -mb-2 -mt-1.5 max-h-72 w-full max-w-lg origin-top scroll-py-2 rounded-b-lg bg-white text-sm text-gray-800 shadow-md dark:bg-neutral-900 dark:text-gray-100">
+          {suggestions.map((suggestion, index) => (
+            <Combobox.Option
+              key={index}
+              value={`${suggestion.name},${suggestion.sys.country}`}
+              className={({ active }) =>
+                classNames(
+                  'cursor-default select-none rounded-lg px-4 py-2',
+                  active
+                    ? 'bg-neutral-200 text-black first:rounded-t-none dark:bg-gray-700 dark:text-white'
+                    : '',
+                )
+              }
+            >
+              {suggestion.name}, {suggestion.sys.country}
+            </Combobox.Option>
+          ))}
+        </Combobox.Options>
+      )}
     </Combobox>
   );
 }
