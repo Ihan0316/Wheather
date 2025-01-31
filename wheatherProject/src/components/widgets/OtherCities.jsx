@@ -1,6 +1,5 @@
 import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
 import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
-
 import { useDispatch } from 'react-redux';
 import City from './City';
 import { saveLocation } from '../../features/search/searchSlice';
@@ -39,14 +38,29 @@ function OtherCities() {
       country: 'Central Singapore',
       geolocation: { lat: '1.28333', lng: '103.85' },
     },
+    {
+      city: 'Sydney',
+      country: 'Australia',
+      geolocation: { lat: '33.8688', lng: '151.2093' },
+    },
+    {
+      city: 'Los Angeles',
+      country: 'United States',
+      geolocation: { lat: '34.0522', lng: '-118.2437' },
+    },
+    {
+      city: 'Berlin',
+      country: 'Germany',
+      geolocation: { lat: '52.5200', lng: '13.4050' },
+    },
   ];
 
   const data = cities.map((city) => {
-    const { data, isSuccess } = useGetCurrentWeatherQuery({
+    const { data, isSuccess, isLoading } = useGetCurrentWeatherQuery({
       lat: city.geolocation.lat,
       lng: city.geolocation.lng,
     });
-    return { data, isSuccess };
+    return { data, isSuccess, isLoading };
   });
 
   const handleClick = (item) => {
@@ -73,10 +87,9 @@ function OtherCities() {
         <div
           key={i}
           onClick={() => handleClick(item)}
-          className="flex w-1/3 flex-col gap-4"
+          className="flex w-1/4 flex-col gap-4"
         >
           {' '}
-          {/* 각 항목을 1/3 너비로 설정 */}
           <City
             city={cities[i].city}
             country={cities[i].country}
