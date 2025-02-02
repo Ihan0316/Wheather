@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { saveGeoCode } from "../../features/geolocation/geolocationSlice";
 import { saveLocation } from "../../features/search/searchSlice";
 
-function SearchBar() {
+export default function SearchBar() {
   const [city, setCity] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();

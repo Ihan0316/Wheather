@@ -7,9 +7,11 @@ import { MapPinIcon } from '@heroicons/react/20/solid';
 import { useDispatch } from 'react-redux';
 import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
 import { saveLocation } from '../../features/search/searchSlice';
+import FortuneRecommendation from './FortuneRecommendation'; // FortuneRecommendation 컴포넌트 임포트
 
 function Header() {
   const dispatch = useDispatch();
+  const [showFortune, setShowFortune] = useState(false);
 
   const handleCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -19,8 +21,7 @@ function Header() {
           const lon = position.coords.longitude;
 
           fetch(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
-              import.meta.env.VITE_API_KEY_OPENWEATHERMAP
+            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY_OPENWEATHERMAP
             }`,
           )
             .then((response) => response.json())
@@ -42,15 +43,17 @@ function Header() {
     }
   };
 
+  const toggleFortune = () => {
+    setShowFortune(true); // 모달을 열 때마다 true로 설정
+  };
+
   return (
     <>
       <nav className="my-4 flex items-center justify-between pr-6">
-        {/* Location: 맨 왼쪽 */}
         <div className="invisible md:visible">
           <Location />
         </div>
 
-        {/* 가운데 배치 */}
         <div className="mx-auto flex items-center gap-2">
           <SearchBar />
           <button
@@ -59,9 +62,14 @@ function Header() {
           >
             <MapPinIcon className="h-6 w-6" aria-hidden="true" />
           </button>
+          <button
+            onClick={toggleFortune}
+            className="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors"
+          >
+            오늘의 운세
+          </button>
         </div>
 
-        {/* ThemeSwitchToggle: 맨 오른쪽 */}
         <ThemeSwitchToggle />
       </nav>
       <div className="flex gap-2 px-6 py-4 text-lg font-semibold sm:px-0">
@@ -77,6 +85,8 @@ function Header() {
           </button>
         </Link>
       </div>
+
+      {showFortune && <FortuneRecommendation onClose={() => setShowFortune(false)} />}
     </>
   );
 }
