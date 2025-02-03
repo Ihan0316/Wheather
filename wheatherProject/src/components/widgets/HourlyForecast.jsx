@@ -1,7 +1,7 @@
-import { useSelector } from "react-redux";
-import { BiTime } from "react-icons/bi";
-import WeatherIcon from "../common/WeatherIcon";
-import { useGetHourlyForecastQuery } from "../../services/WeatherAPI";
+import { useSelector } from 'react-redux';
+import { BiTime } from 'react-icons/bi';
+import WeatherIcon from '../common/WeatherIcon';
+import { useGetHourlyForecastQuery } from '../../services/WeatherAPI';
 
 function HourlyForecast() {
   const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
@@ -14,13 +14,13 @@ function HourlyForecast() {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
     let local_time_format = local_time
-      .toLocaleTimeString("ko-KR", {
-        timeZone: "UTC",
+      .toLocaleTimeString('ko-KR', {
+        timeZone: 'UTC',
         hour12: false,
-        hour: "numeric",
+        hour: 'numeric',
       })
-      .replace("AM", "")
-      .replace("PM", "");
+      .replace('AM', '')
+      .replace('PM', '');
     return local_time_format;
   }
 
@@ -31,7 +31,7 @@ function HourlyForecast() {
           {/* TITLE */}
           <div className="flex flex-row gap-1">
             <BiTime className="h-4 w-4" />
-            <div className="text-xs font-semibold">HOURLY FORECAST</div>
+            <div className="text-xs font-semibold">시간별 날씨</div>
           </div>
 
           <div className="mt-2 flex h-full flex-row justify-items-center gap-4 ">
