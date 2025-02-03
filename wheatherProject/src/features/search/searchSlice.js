@@ -18,6 +18,5 @@ const searchSlice = createSlice({
   },
 });
 
-export const { updateSearchValue, clearnInputValue, saveLocation } =
-  searchSlice.actions;
+export const { updateSearchValue, saveLocation } = searchSlice.actions;
 export default searchSlice;
