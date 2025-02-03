@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { useGetHourlyForecastQuery } from "../../services/WeatherAPI";
-import { useSelector } from "react-redux";
-import { IoRainy } from "react-icons/io5";
-import Chart, { BarController } from "chart.js/auto";
+import { useEffect, useRef, useState } from 'react';
+import { useGetHourlyForecastQuery } from '../../services/WeatherAPI';
+import { useSelector } from 'react-redux';
+import { IoRainy } from 'react-icons/io5';
+import Chart, { BarController } from 'chart.js/auto';
 
 function ChanceOfRain() {
   //   Access to RTX Query cashed data
@@ -16,10 +16,10 @@ function ChanceOfRain() {
   function convertToHour(dt, timezone) {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
-    let local_time_format = local_time.toLocaleTimeString("Ko-kr", {
-      timeZone: "UTC",
+    let local_time_format = local_time.toLocaleTimeString('Ko-kr', {
+      timeZone: 'UTC',
       hour12: true,
-      hour: "numeric",
+      hour: 'numeric',
     });
     return local_time_format;
   }
@@ -37,14 +37,14 @@ function ChanceOfRain() {
 
       // Create a new chart instance and store it in state
       const newChart = new Chart(chartRef.current, {
-        type: "bar",
+        type: 'bar',
         data: {
           labels: rainData.map(({ time }) => time),
           datasets: [
             {
-              label: "Chance of Rain",
+              label: '강우확률',
               data: rainData.map(({ chanceOfRain }) => chanceOfRain),
-              backgroundColor: "#171717",
+              backgroundColor: '#171717',
               borderWidth: 1,
               borderRadius: Number.MAX_VALUE,
               barThickness: 10,
@@ -75,13 +75,13 @@ function ChanceOfRain() {
                 stepSize: 33,
                 callback: function (value) {
                   if (value <= 5) {
-                    return "Minimal";
+                    return 'Minimal';
                   } else if (value <= 10) {
-                    return "Slight";
+                    return 'Slight';
                   } else if (value <= 40) {
-                    return "Moderate";
+                    return 'Moderate';
                   } else {
-                    return "Rainy";
+                    return 'Rainy';
                   }
                 },
               },
