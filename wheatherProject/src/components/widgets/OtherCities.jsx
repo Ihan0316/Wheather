@@ -9,51 +9,86 @@ function OtherCities() {
 
   const cities = [
     {
-      city: 'Korea',
-      country: 'Busan',
+      city: '부산',
+      country: '대한민국',
       geolocation: { lat: '35.1652', lng: '129.043' },
+      continent: '아시아',
     },
     {
-      city: 'New York',
-      country: 'United States',
+      city: '뉴욕',
+      country: '미국',
       geolocation: { lat: '40.7128', lng: '-74.0060' },
+      continent: '북아메리카',
     },
     {
-      city: 'London',
-      country: 'United Kingdom',
+      city: '런던',
+      country: '영국',
       geolocation: { lat: '51.5074', lng: '-0.1278' },
+      continent: '유럽',
     },
     {
-      city: 'Tokyo',
-      country: 'Japan',
+      city: '도쿄',
+      country: '일본',
       geolocation: { lat: '35.6895', lng: '139.6917' },
+      continent: '아시아',
     },
     {
-      city: 'Paris',
-      country: 'France',
+      city: '파리',
+      country: '프랑스',
       geolocation: { lat: '48.8566', lng: '2.3522' },
+      continent: '유럽',
     },
     {
-      city: 'Singapore',
-      country: 'Central Singapore',
+      city: '싱가포르',
+      country: '싱가포르',
       geolocation: { lat: '1.28333', lng: '103.85' },
+      continent: '아시아',
     },
     {
-      city: 'Sydney',
-      country: 'Australia',
+      city: '시드니',
+      country: '호주',
       geolocation: { lat: '-33.8688', lng: '151.2093' },
+      continent: '오세아니아',
     },
     {
-      city: 'Los Angeles',
-      country: 'United States',
+      city: '로스앤젤레스',
+      country: '미국',
       geolocation: { lat: '34.0522', lng: '-118.2437' },
+      continent: '북아메리카',
     },
     {
-      city: 'Berlin',
-      country: 'Germany',
+      city: '베를린',
+      country: '독일',
       geolocation: { lat: '52.5200', lng: '13.4050' },
+      continent: '유럽',
+    },
+    {
+      city: '밴쿠버',
+      country: '캐나다',
+      geolocation: { lat: '49.2827', lng: '123.1207' },
+      continent: '북아메리카',
+    },
+    {
+      city: '카이로',
+      country: '이집트',
+      geolocation: { lat: '30.0444', lng: '31.2357' },
+      continent: '아프리카',
+    },
+    {
+      city: '케이프타운',
+      country: '남아프리카 공화국',
+      geolocation: { lat: '33.9249', lng: '18.4241' },
+      continent: '아프리카',
     },
   ];
+
+  // 대륙별로 도시들을 분류
+  const continents = ['아시아', '북아메리카', '유럽', '오세아니아', '아프리카'];
+
+  const citiesByContinent = continents.reduce((acc, continent) => {
+    acc[continent] = cities.filter((city) => city.continent === continent);
+    return acc;
+  }, {});
 
   const data = cities.map((city) => {
     const { data, isSuccess, isLoading } = useGetCurrentWeatherQuery({
@@ -82,22 +117,43 @@ function OtherCities() {
     <main className="container mx-auto">
       <div className="flex flex-col md:flex-row">
         <div className="p-6 sm:p-0 md:w-full">
-          <div className="mb-4 text-lg font-semibold">Other large cities</div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {data.map((item, i) => (
-              <div
-                key={i}
-                onClick={() => handleClick(item)}
-                className="flex flex-col gap-4 rounded-md p-2 shadow-md" // shadow 추가, border 제거
-              >
-                <City
-                  city={cities[i].city}
-                  country={cities[i].country}
-                  data={item.data}
-                />
-              </div>
-            ))}
+          <div
+            className="mb-4 font-semibold"
+            style={{
+              fontSize: '28px',
+              marginTop: '10px',
+              marginBottom: '25px',
+            }}
+          >
+            다른도시
           </div>
+
+          {/* 대륙별로 도시들 렌더링 */}
+          {continents.map((continent) => (
+            <div key={continent} className="mb-8">
+              <div
+                className="mb-4 font-semibold"
+                style={{ fontSize: '20px' }} // 대륙별 제목 폰트 크기 28px로 설정
+              >
+                {continent}
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {citiesByContinent[continent].map((city, i) => (
+                  <div
+                    key={i}
+                    onClick={() => handleClick(data[i])}
+                    className="flex flex-col gap-4 rounded-md p-2 shadow-md"
+                  >
+                    <City
+                      city={city.city}
+                      country={city.country}
+                      data={data[i].data}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </main>

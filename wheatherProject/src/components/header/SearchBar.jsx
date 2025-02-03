@@ -70,7 +70,7 @@ function SearchBar() {
       <div className="flex gap-2">
         <input
           type="text"
-          placeholder="Enter city name"
+          placeholder="도시를 입력해주세요"
           className="w-full rounded-lg bg-neutral-50 px-4 py-2.5
                      text-gray-900 placeholder-gray-500 outline-none 
                      focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 
@@ -82,7 +82,7 @@ function SearchBar() {
           onClick={handleSearch}
           className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
         >
-          Get Weather
+          Search
         </button>
       </div>
 

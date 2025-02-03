@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
-import { FiWind } from "react-icons/fi";
-import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
+import { useSelector } from 'react-redux';
+import { FiWind } from 'react-icons/fi';
+import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
 
 function Wind() {
   //   Access to RTX Query cashed data
@@ -17,7 +17,7 @@ function Wind() {
           {/* TITLE */}
           <div className="flex flex-row content-center justify-start gap-1">
             <FiWind className="h-4 w-4" />
-            <div className="text-xs font-semibold">WIND</div>
+            <div className="text-xs font-semibold">바람</div>
           </div>
 
           <div className="relative -mt-1 flex h-full w-full flex-col content-center items-center align-middle">
@@ -665,7 +665,7 @@ function Wind() {
             </div>
 
             {/* Speed */}
-            <div className="absolute top-1/2 left-0 w-full -translate-y-1/2 transform">
+            <div className="absolute left-0 top-1/2 w-full -translate-y-1/2 transform">
               <div className="text-bold absolute flex h-full w-full flex-col items-center justify-center">
                 <span className="text-lg font-semibold">
                   {Math.round(data.wind.speed)}

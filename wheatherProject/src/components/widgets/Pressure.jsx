@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
-import { WiBarometer } from "react-icons/wi";
-import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
+import { useSelector } from 'react-redux';
+import { WiBarometer } from 'react-icons/wi';
+import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
 
 function Pressure() {
   //   Access to RTX Query cashed data
@@ -13,13 +13,13 @@ function Pressure() {
   function getPressureMessage(pressure) {
     switch (true) {
       case pressure <= 1000:
-        return "Low pressure";
+        return '저기압';
       case pressure <= 1013:
-        return "Normal pressure";
+        return '표준기압(보통)';
       case pressure <= 1020:
-        return "High pressure";
+        return '고기압';
       default:
-        return "Very high pressure";
+        return '초고기압';
     }
   }
 
@@ -30,7 +30,7 @@ function Pressure() {
           {/* TITLE */}
           <div className="flex flex-row gap-1">
             <WiBarometer className="h-5 w-5" />
-            <div className="text-xs font-semibold">PRESSURE</div>
+            <div className="text-xs font-semibold">기압</div>
           </div>
           <div className="mt-2 h-full">
             <div className="text-2xl font-semibold">
