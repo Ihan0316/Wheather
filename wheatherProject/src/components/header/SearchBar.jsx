@@ -5,15 +5,15 @@
  * => OtherCities에서 도시 클릭했을 때와 동일하게 모든 위젯 업데이트
  */
 
-import React, { useState } from "react";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { saveGeoCode } from "../../features/geolocation/geolocationSlice";
-import { saveLocation } from "../../features/search/searchSlice";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
+import { saveLocation } from '../../features/search/searchSlice';
 
 function SearchBar() {
-  const [city, setCity] = useState("");
-  const [error, setError] = useState("");
+  const [city, setCity] = useState('');
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
 
   // .env 또는 vite.config에서 API_KEY 가져온다고 가정
@@ -23,11 +23,11 @@ function SearchBar() {
   const handleSearch = async () => {
     if (!city) return;
     try {
-      setError("");
+      setError('');
 
       // 1) OpenWeatherMap 'weather?q=도시명' API 호출
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`,
       );
 
       const data = response.data;
@@ -45,8 +45,8 @@ function SearchBar() {
 
       // 2) 응답에서 lat/lon, 도시명, 국가 등을 추출
       const { lon, lat } = data.coord;
-      const cityName = data.name;              // 예: "Seoul"
-      const country = data.sys.country;        // 예: "KR"
+      const cityName = data.name; // 예: "Seoul"
+      const country = data.sys.country; // 예: "KR"
 
       // 3) OtherCities 클릭과 같은 방식으로 redux store 업데이트
       dispatch(saveGeoCode({ lat, lng: lon }));
@@ -58,10 +58,10 @@ function SearchBar() {
       window.scrollTo(0, 0);
 
       // 검색창 초기화(원하시는 경우)
-      setCity("");
+      setCity('');
     } catch (err) {
       console.error(err);
-      setError("해당 도시 정보를 가져올 수 없습니다.");
+      setError('해당 도시 정보를 가져올 수 없습니다.');
     }
   };
 
@@ -71,7 +71,7 @@ function SearchBar() {
         <input
           type="text"
           placeholder="Enter city name"
-          className="w-full rounded-lg bg-neutral-50 py-2.5 px-4
+          className="w-full rounded-lg bg-neutral-50 px-4 py-2.5
                      text-gray-900 placeholder-gray-500 outline-none 
                      focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 
                      dark:placeholder-gray-400 sm:text-sm"
@@ -87,7 +87,9 @@ function SearchBar() {
       </div>
 
       {/* 에러 메시지 */}
-      {error && <div className="text-red-500 text-sm">{error}</div>}
+      {error && <div className="text-sm text-red-500">{error}</div>}
     </div>
   );
 }
+
+export default SearchBar;
