@@ -137,7 +137,7 @@ function OtherCities() {
                   <div
                     key={i}
                     onClick={() => handleClick(data[i])}
-                    className="flex cursor-pointer flex-col gap-4 rounded-lg p-4 transition-shadow hover:shadow-xl"
+                    className="flex cursor-pointer flex-col gap-4 rounded-lg p-4"
                   >
                     <City
                       city={city.city}
