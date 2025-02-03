@@ -131,18 +131,13 @@ function OtherCities() {
           {/* 대륙별로 도시들 렌더링 */}
           {continents.map((continent) => (
             <div key={continent} className="mb-8">
-              <div
-                className="mb-4 font-semibold"
-                style={{ fontSize: '20px' }} // 대륙별 제목 폰트 크기 28px로 설정
-              >
-                {continent}
-              </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              <div className="mb-4 text-xl font-semibold">{continent}</div>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {citiesByContinent[continent].map((city, i) => (
                   <div
                     key={i}
                     onClick={() => handleClick(data[i])}
-                    className="flex flex-col gap-4 rounded-md p-2 shadow-md"
+                    className="flex cursor-pointer flex-col gap-4 rounded-lg p-4 transition-shadow hover:shadow-xl"
                   >
                     <City
                       city={city.city}
