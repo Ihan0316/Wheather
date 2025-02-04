@@ -96,21 +96,25 @@ function OtherCities() {
     acc[continent] = cities.filter((city) => city.continent === continent);
     return acc;
   }, {});
-  // const continents2 = ['Asia', 'North America', 'Europe', 'Oceania', 'Africa'];
 
-  // const citiesByContinent2 = continents2.reduce((acc, continent) => {
-  //   acc[continent] = cities.filter((city) => city.continent === continent);
-  //   return acc;
-  // }, {});
-  
+  const dataMap = [];
 
   const data = cities.map((city) => {
     const { data, isSuccess, isLoading } = useGetCurrentWeatherQuery({
       lat: city.geolocation.lat,
       lng: city.geolocation.lng,
     });
+
+    
     return { data, isSuccess, isLoading };
   });
+
+  // const citiesByContinent2 = continents.map((continent) => {
+  //   citiesByContinent[continent].map((city) => {
+  //     console.log(data)
+  //     dataMap.push(data?.filter((info) => info.data.coord.lat === city.geolocation.lat));
+  //   })
+  // });
 
   const handleClick = (city) => {
     // Save geolocation to redux store
