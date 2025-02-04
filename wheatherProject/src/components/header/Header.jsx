@@ -21,7 +21,8 @@ function Header() {
           const lon = position.coords.longitude;
 
           fetch(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY_OPENWEATHERMAP
+            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
+              import.meta.env.VITE_API_KEY_OPENWEATHERMAP
             }`,
           )
             .then((response) => response.json())
@@ -64,7 +65,7 @@ function Header() {
           </button>
           <button
             onClick={toggleFortune}
-            className="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors"
+            className="ml-2 rounded bg-blue-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-600"
           >
             오늘의 운세
           </button>
@@ -86,7 +87,9 @@ function Header() {
         </Link>
       </div>
 
-      {showFortune && <FortuneRecommendation onClose={() => setShowFortune(false)} />}
+      {showFortune && (
+        <FortuneRecommendation onClose={() => setShowFortune(false)} />
+      )}
     </>
   );
 }
