@@ -40,22 +40,22 @@ function UVIndex() {
     let result;
     switch (true) {
       case data <= 2:
-        result = "Low";
+        result = "좋음";
         break;
       case data > 2 && data <= 5:
-        result = "Moderate";
+        result = "보통";
         break;
       case data > 5 && data <= 7:
-        result = "High";
+        result = "높음";
         break;
       case data > 7 && data <= 10:
-        result = "Very High";
+        result = "매우높음";
         break;
       case data > 10 && data <= 11:
-        result = "Extreme";
+        result = "최악";
         break;
       default:
-        return "Invalid data value";
+        return "존재하지 않는 값입니다.";
     }
     return result;
   }
@@ -63,13 +63,13 @@ function UVIndex() {
   function getUVIndexMessage(uvIndex) {
     switch (true) {
       case uvIndex < 3:
-        return "No protection needed.";
+        return "야외활동하기 딱 좋은 자외선입니다! 신선한 공기를 느껴보세요";
       case uvIndex < 6:
-        return "Wear a hat and use sunscreen.";
+        return "자외선이 피부미용을 위해 모자나 선크림 꼭 착용해주세요!!";
       case uvIndex < 8:
-        return "Take extra precautions.";
+        return "자외선이 너무 높습니다! 외부활동을 자제해주세요!!!";
       case uvIndex < 11:
-        return "Wear protective clothing. Avoid the sun during peak hours.";
+        return "가급적 실내에만 머물러 주세요.";
       default:
         return "Take all precautions, including staying indoors during peak hours.";
     }
@@ -82,7 +82,7 @@ function UVIndex() {
           {/* TITLE */}
           <div className="flex flex-row gap-1">
             <HiSun className="h-4 w-4" />
-            <div className="text-xs font-semibold">UV INDEX</div>
+            <div className="text-xs font-semibold">자외선</div>
           </div>
 
           {/* MAIN CONTENT */}
