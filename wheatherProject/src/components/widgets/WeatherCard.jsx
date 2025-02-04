@@ -90,33 +90,33 @@ function WeatherCard() {
 
               <div className="flex flex-col gap-1">
                 <div className="flex flex-row gap-1">
-                  <div>Real Feel</div>
+                  <div>체감온도</div>
                   <div className="font-KardustBold">
                     {Math.round(item.main.feels_like)}&deg;
                   </div>
                 </div>
                 <div className="flex flex-row gap-1">
-                  <div>Wind</div>
+                  <div>풍속</div>
                   <div className="font-KardustBold">
                     {Math.round(item.wind.speed)} m/s
                   </div>
                 </div>
 
                 <div className="flex flex-row gap-1">
-                  <div>Humidity</div>
+                  <div>습도</div>
                   <div className="font-KardustBold">{item.main.humidity}%</div>
                 </div>
               </div>
               <div className="ml-1 self-end">
                 <div className="flex flex-col gap-1">
                   <div className="flex flex-row gap-1">
-                    <div>Sunrise</div>
+                    <div>일출</div>
                     <div className="font-KardustBold">
                       {getLocalTime(item.timezone, item.sys.sunrise)}
                     </div>
                   </div>
                   <div className="flex flex-row gap-1">
-                    <div>Sunset</div>
+                    <div>일몰</div>
                     <div className="font-KardustBold">
                       {getLocalTime(item.timezone, item.sys.sunset)}
                     </div>

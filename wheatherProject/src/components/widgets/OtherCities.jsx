@@ -80,6 +80,13 @@ function OtherCities() {
       geolocation: { lat: '33.9249', lng: '18.4241' },
       continent: '아프리카',
     },
+
+    {
+      city: '멜버른',
+      country: '호주',
+      geolocation: { lat: '37.8136', lng: '144.9631' },
+      continent: '오세아니아',
+    },
   ];
 
   // 대륙별로 도시들을 분류
@@ -89,6 +96,13 @@ function OtherCities() {
     acc[continent] = cities.filter((city) => city.continent === continent);
     return acc;
   }, {});
+  // const continents2 = ['Asia', 'North America', 'Europe', 'Oceania', 'Africa'];
+
+  // const citiesByContinent2 = continents2.reduce((acc, continent) => {
+  //   acc[continent] = cities.filter((city) => city.continent === continent);
+  //   return acc;
+  // }, {});
+  
 
   const data = cities.map((city) => {
     const { data, isSuccess, isLoading } = useGetCurrentWeatherQuery({
@@ -98,16 +112,16 @@ function OtherCities() {
     return { data, isSuccess, isLoading };
   });
 
-  const handleClick = (item) => {
+  const handleClick = (city) => {
     // Save geolocation to redux store
     dispatch(
       saveGeoCode({
-        lat: item.data.coord.lat,
-        lng: item.data.coord.lon,
+        lat: city.geolocation.lat,
+        lng: city.geolocation.lng,
       }),
     );
     // save location to redux store
-    dispatch(saveLocation(item.data.name, item.data.sys.country));
+    dispatch(saveLocation(city.city, city.country));
 
     // scroll to top of page
     window.scrollTo(0, 0);
@@ -136,7 +150,7 @@ function OtherCities() {
                 {citiesByContinent[continent].map((city, i) => (
                   <div
                     key={i}
-                    onClick={() => handleClick(data[i])}
+                    onClick={() => handleClick(city)}
                     className="flex cursor-pointer flex-col gap-4 rounded-lg p-4"
                   >
                     <City
