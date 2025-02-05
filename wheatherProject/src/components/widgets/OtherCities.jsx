@@ -176,9 +176,7 @@ function OtherCities() {
               marginTop: '100px',
               marginBottom: '25px',
             }}
-          >
-            세계 주요 도시 날씨
-          </h2>
+          ></h2>
 
           {continents.map((continent) => (
             <div key={continent} className="mb-8">

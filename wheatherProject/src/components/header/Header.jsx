@@ -102,7 +102,7 @@ function Header() {
 
         <Link to="favorite">
           <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-            즐겨 찾기
+            즐겨찾기
           </button>
         </Link>
       </div>

@@ -10,28 +10,38 @@ function Favorite() {
 
   const fetchCityCoordinates = async (cityName) => {
     const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
-    const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric&lang=kr`,
-    );
-    return response.data;
+    // 한글 도시명을 영문으로 변환
+    const englishCityName = cityTranslationMap[cityName] || cityName;
+
+    try {
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${englishCityName}&appid=${apiKey}&units=metric&lang=kr`,
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleAddCity = async (cityName) => {
+    // 도시명이 cityTranslationMap에 없는 경우 에러 처리
+    if (!cityTranslationMap[cityName]) {
+      alert('도시 목록에서 선택해주세요.');
+      return;
+    }
+
     const existingCity = cities.find((city) => city.name === cityName);
     if (existingCity) {
       alert('이미 추가된 도시입니다.');
       return;
     }
 
-    // 도시 이름 번역 처리
-    const translatedCityName = cityTranslationMap[cityName] || cityName;
-
     try {
-      const cityData = await fetchCityCoordinates(translatedCityName);
+      const cityData = await fetchCityCoordinates(cityName);
       if (cityData.cod === 200) {
         const newCity = {
           name: cityName, // 한글 도시명 저장
-          englishName: translatedCityName, // 영문 도시명 저장
+          englishName: cityTranslationMap[cityName] || cityName, // 영문 도시명 저장
           lat: cityData.coord.lat,
           lng: cityData.coord.lon,
         };
@@ -48,14 +58,18 @@ function Favorite() {
         <div className="relative">
           <input
             type="text"
-            placeholder="도시를 검색하세요"
+            placeholder="도시 이름을 입력하고 목록에서 선택하세요"
             className="w-full rounded border border-gray-400 p-2"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                handleAddCity(searchTerm);
-                setSearchTerm('');
+                if (cityTranslationMap[searchTerm]) {
+                  handleAddCity(searchTerm);
+                  e.preventDefault(); // IME 이벤트 방지
+                  e.target.value = ''; // 입력창 직접 초기화
+                  setSearchTerm(''); // 상태 초기화
+                }
               }
             }}
           />
