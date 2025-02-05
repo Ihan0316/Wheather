@@ -68,7 +68,7 @@ function OtherCities() {
       geolocation: { lat: '49.2827', lng: '123.1207' },
       continent: '북아메리카',
     },
-    
+
     {
       city: '카이로',
       country: '이집트',
@@ -87,7 +87,7 @@ function OtherCities() {
       geolocation: { lat: '37.8136', lng: '144.9631' },
       continent: '오세아니아',
     },
-     {
+    {
       city: '베이징',
       country: '중국',
       geolocation: { lat: '39.9042', lng: '116.4074' },
@@ -129,9 +129,6 @@ function OtherCities() {
       geolocation: { lat: '6.5244', lng: '3.3792' },
       continent: '아프리카',
     },
-
-    
-  
   ];
 
   // 대륙별로 도시들을 분류
@@ -142,29 +139,21 @@ function OtherCities() {
     return acc;
   }, {});
 
-  const dataMap = [];
-
-  const data = cities.map((city) => {
-    const { data, isSuccess, isLoading } = useGetCurrentWeatherQuery({
+  const weatherQueries = cities.map((city) => {
+    return useGetCurrentWeatherQuery({
       lat: city.geolocation.lat,
       lng: city.geolocation.lng,
     });
-
-    return { data, isSuccess, isLoading };
   });
 
   const handleClick = (city) => {
-    // Save geolocation to redux store
     dispatch(
       saveGeoCode({
         lat: city.geolocation.lat,
         lng: city.geolocation.lng,
       }),
     );
-    // save location to redux store
     dispatch(saveLocation(city.city, city.country));
-
-    // scroll to top of page
     window.scrollTo(0, 0);
   };
 
@@ -172,36 +161,52 @@ function OtherCities() {
     <main className="container mx-auto">
       <div className="flex flex-col md:flex-row">
         <div className="p-6 sm:p-0 md:w-full">
-          {/* 다른도시 텍스트 부분 수정 */}
-          <div
-            className="mb-4 font-semibold text-center border-b-2 py-2"
+          <h2
+            className="mb-4 border-b-2 py-2 text-center font-semibold"
             style={{
               fontSize: '28px',
               marginTop: '100px',
               marginBottom: '25px',
             }}
           >
-          </div>
-        
+            세계 주요 도시 날씨
+          </h2>
 
-          {/* 대륙별로 도시들 렌더링 */}
           {continents.map((continent) => (
             <div key={continent} className="mb-8">
-              <div className="mb-4 text-xl font-semibold text-center">{continent}</div>
+              <div className="mb-4 text-center text-xl font-semibold">
+                {continent}
+              </div>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {citiesByContinent[continent].map((city, i) => (
-                  <div
-                    key={i}
-                    onClick={() => handleClick(city)}
-                    className="flex cursor-pointer flex-col gap-4 rounded-lg p-4"
-                  >
-                    <City
-                      city={city.city}
-                      country={city.country}
-                      data={data[i].data}
-                    />
-                  </div>
-                ))}
+                {citiesByContinent[continent].map((city, index) => {
+                  const cityIndex = cities.findIndex(
+                    (c) => c.city === city.city,
+                  );
+                  const { data, isLoading, isError } =
+                    weatherQueries[cityIndex];
+
+                  return (
+                    <div
+                      key={city.city}
+                      onClick={() => handleClick(city)}
+                      className="flex cursor-pointer flex-col gap-4 rounded-lg p-4 transition-colors hover:bg-gray-100"
+                    >
+                      {isLoading ? (
+                        <div className="p-4 text-center">로딩 중...</div>
+                      ) : isError ? (
+                        <div className="p-4 text-center text-red-500">
+                          날씨 정보를 불러올 수 없습니다
+                        </div>
+                      ) : (
+                        <City
+                          city={city.city}
+                          country={city.country}
+                          data={data}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
