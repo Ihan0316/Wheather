@@ -59,7 +59,7 @@ function Favorite() {
           <input
             type="text"
             placeholder="도시 이름을 입력하고 목록에서 선택하세요"
-            className="w-full rounded border border-gray-400 p-2"
+            className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
