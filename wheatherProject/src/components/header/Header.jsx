@@ -8,10 +8,12 @@ import { useDispatch } from 'react-redux';
 import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
 import { saveLocation } from '../../features/search/searchSlice';
 import FortuneRecommendation from './FortuneRecommendation'; // FortuneRecommendation 컴포넌트 임포트
+import { SearchCountryModal } from './SearchCountryModal'; // SearchCountryModal 컴포넌트 임포트
 
 function Header() {
   const dispatch = useDispatch();
   const [showFortune, setShowFortune] = useState(false);
+  const [showSearchCountryModal, setShowSearchCountryModal] = useState(false); // SearchCountryModal 상태 추가
 
   const handleCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -48,6 +50,10 @@ function Header() {
     setShowFortune(true); // 모달을 열 때마다 true로 설정
   };
 
+  const toggleSearchCountryModal = () => {
+    setShowSearchCountryModal(true); // SearchCountryModal 열기
+  };
+
   return (
     <>
       <nav className="my-4 flex items-center justify-between pr-6">
@@ -56,6 +62,14 @@ function Header() {
         </div>
 
         <div className="mx-auto flex items-center gap-2">
+          {/* SearchCountryModal 버튼 추가 */}
+          <button
+            onClick={toggleSearchCountryModal}
+            className="ml-2 rounded bg-green-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-600"
+          >
+            도시 선택
+          </button>
+
           <SearchBar />
           <button
             onClick={handleCurrentLocation}
@@ -87,8 +101,14 @@ function Header() {
         </Link>
       </div>
 
+      {/* FortuneRecommendation 모달 */}
       {showFortune && (
         <FortuneRecommendation onClose={() => setShowFortune(false)} />
+      )}
+
+      {/* SearchCountryModal 모달 */}
+      {showSearchCountryModal && (
+        <SearchCountryModal onClose={() => setShowSearchCountryModal(false)} />
       )}
     </>
   );
