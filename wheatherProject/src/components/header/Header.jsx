@@ -90,13 +90,13 @@ function Header() {
       <div className="flex gap-2 px-6 py-4 text-lg font-semibold sm:px-0">
         <Link to="/weather-app-vite/">
           <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-            Today
+            오늘의날씨
           </button>
         </Link>
 
         <Link to="forecast">
           <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-            Next 5 days
+            앞으로 5일
           </button>
         </Link>
       </div>
