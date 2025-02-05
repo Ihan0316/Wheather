@@ -150,15 +150,15 @@ function OtherCities() {
     // 문자열로 된 좌표값을 숫자로 변환
     const lat = parseFloat(city.geolocation.lat);
     const lng = parseFloat(city.geolocation.lng);
-    
+
     // 숫자로 변환된 좌표값을 저장
     dispatch(
       saveGeoCode({
         lat: lat,
         lng: lng,
-      })
+      }),
     );
-    
+
     // city와 country를 개별 인자로 전달
     dispatch(saveLocation(city.city, city.country));
 
@@ -197,7 +197,7 @@ function OtherCities() {
                     <div
                       key={city.city}
                       onClick={() => handleClick(city)}
-                      className="flex cursor-pointer flex-col gap-4 rounded-lg p-4 transition-colors hover:bg-gray-100"
+                      className="flex cursor-pointer flex-col gap-4 rounded-lg p-4 transition-colors"
                     >
                       {isLoading ? (
                         <div className="p-4 text-center">로딩 중...</div>
