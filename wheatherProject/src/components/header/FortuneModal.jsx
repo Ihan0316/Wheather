@@ -1,5 +1,6 @@
 import React from 'react';
 import { IoCloseCircleOutline } from "react-icons/io5";
+import LottoGenerator from '../LottoGenerator'; // 로또 컴포넌트 import
 
 export const FortuneModal = ({ fortune, onClose }) => {
     return (
@@ -15,9 +16,18 @@ export const FortuneModal = ({ fortune, onClose }) => {
                             <IoCloseCircleOutline size={24} />
                         </button>
                     </div>
+
+                    {/* 운세 결과 출력 */}
                     <div className="prose dark:prose-invert max-w-none text-sm leading-6 whitespace-pre-line">
                         {fortune}
                     </div>
+
+                    {/* 행운의 번호 섹션 */}
+                    <div className="mt-6 text-center">
+                        <LottoGenerator /> {/* 여기서 로또 번호 표시 */}
+                    </div>
+
+                    {/* 닫기 버튼 */}
                     <div className="mt-6 flex justify-end">
                         <button
                             onClick={onClose}
