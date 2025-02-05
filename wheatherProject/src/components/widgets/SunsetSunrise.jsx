@@ -43,12 +43,12 @@ const SunsetSunrise = () => {
           {/* TITLE */}
           {TitleFormating(data) === 'DAY' ? (
             <div className="flex flex-row gap-1">
-              <BsSunriseFill />
+              <BsSunsetFill />
               <div className="text-xs font-semibold">일몰</div>
             </div>
           ) : (
             <div className="flex flex-row gap-1">
-              <BsSunsetFill />
+              <BsSunriseFill />
               <div className="text-xs font-semibold">일출</div>
             </div>
           )}
