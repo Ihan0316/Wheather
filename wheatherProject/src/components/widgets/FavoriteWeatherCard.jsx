@@ -3,18 +3,18 @@ import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
 import WeatherIcon from "../common/WeatherIcon";
 import { TiLocationArrow } from "react-icons/ti";
 
-function WeatherCard() {
-  const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
-  const { data, isSuccess } = useGetCurrentWeatherQuery({
-    lat,
-    lng,
-  });
-
+function FavoriteWeatherCard({lat, lng}) {
+  // const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
   // const { data, isSuccess } = useGetCurrentWeatherQuery({
-  //   lat: lat,    // props로 전달된 lat, lng 사용
-  //   lng: lng,
+  //   lat,
+  //   lng,
   // });
 
+  const { data, isSuccess } = useGetCurrentWeatherQuery({
+    lat: lat,    // props로 전달된 lat, lng 사용
+    lng: lng,
+  });
+  
   function convertToDate(timezone, dt) {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
@@ -134,4 +134,4 @@ function WeatherCard() {
     </>
   );
 }
-export default WeatherCard;
+export default FavoriteWeatherCard;

@@ -99,6 +99,12 @@ function Header() {
             앞으로 5일
           </button>
         </Link>
+
+        <Link to="favorite">
+          <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
+            즐겨 찾기
+          </button>
+        </Link>
       </div>
 
       {/* FortuneRecommendation 모달 */}
