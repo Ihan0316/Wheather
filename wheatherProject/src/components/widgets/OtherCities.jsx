@@ -59,32 +59,32 @@ function OtherCities() {
     {
       city: '베를린',
       country: '독일',
-      geolocation: { lat: '52.5200', lng: '13.4050' },
+      geolocation: { lat: '52.5244', lng: '13.4105' },
       continent: '유럽',
     },
     {
       city: '밴쿠버',
       country: '캐나다',
-      geolocation: { lat: '49.2827', lng: '123.1207' },
+      geolocation: { lat: '49.2497', lng: '-123.1193' },
       continent: '북아메리카',
     },
 
     {
       city: '카이로',
       country: '이집트',
-      geolocation: { lat: '30.0444', lng: '31.2357' },
+      geolocation: { lat: '30.0626', lng: '31.2497' },
       continent: '아프리카',
     },
     {
       city: '케이프타운',
       country: '남아프리카 공화국',
-      geolocation: { lat: '33.9249', lng: '18.4241' },
+      geolocation: { lat: '-33.9258', lng: '18.4232' },
       continent: '아프리카',
     },
     {
       city: '멜버른',
       country: '호주',
-      geolocation: { lat: '37.8136', lng: '144.9631' },
+      geolocation: { lat: '28.0836', lng: '-80.6081' },
       continent: '오세아니아',
     },
     {
@@ -96,13 +96,13 @@ function OtherCities() {
     {
       city: '마드리드',
       country: '스페인',
-      geolocation: { lat: '40.4168', lng: '3.7038' },
+      geolocation: { lat: '40.4165', lng: '-3.7026' },
       continent: '유럽',
     },
     {
       city: '샌프란시스코',
       country: '미국',
-      geolocation: { lat: '37.7749', lng: '122.4194' },
+      geolocation: { lat: '37.7775', lng: '-122.4163' },
       continent: '북아메리카',
     },
     {
@@ -120,13 +120,13 @@ function OtherCities() {
     {
       city: '나이로비',
       country: '케냐',
-      geolocation: { lat: '1.2867', lng: '36.8219' },
+      geolocation: { lat: '-1.2833', lng: '36.8167' },
       continent: '아프리카',
     },
     {
       city: '라고스',
       country: '나이지리아',
-      geolocation: { lat: '6.5244', lng: '3.3792' },
+      geolocation: { lat: '6.4531', lng: '3.3958' },
       continent: '아프리카',
     },
   ];
@@ -147,13 +147,21 @@ function OtherCities() {
   });
 
   const handleClick = (city) => {
+    // 문자열로 된 좌표값을 숫자로 변환
+    const lat = parseFloat(city.geolocation.lat);
+    const lng = parseFloat(city.geolocation.lng);
+    
+    // 숫자로 변환된 좌표값을 저장
     dispatch(
       saveGeoCode({
-        lat: city.geolocation.lat,
-        lng: city.geolocation.lng,
-      }),
+        lat: lat,
+        lng: lng,
+      })
     );
+    
+    // city와 country를 개별 인자로 전달
     dispatch(saveLocation(city.city, city.country));
+
     window.scrollTo(0, 0);
   };
 
