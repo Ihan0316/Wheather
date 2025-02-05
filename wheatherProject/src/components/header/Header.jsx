@@ -8,10 +8,12 @@ import { useDispatch } from 'react-redux';
 import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
 import { saveLocation } from '../../features/search/searchSlice';
 import FortuneRecommendation from './FortuneRecommendation'; // FortuneRecommendation 컴포넌트 임포트
+import { SearchCountryModal } from './SearchCountryModal'; // SearchCountryModal 컴포넌트 임포트
 
 function Header() {
   const dispatch = useDispatch();
   const [showFortune, setShowFortune] = useState(false);
+  const [showSearchCountryModal, setShowSearchCountryModal] = useState(false); // SearchCountryModal 상태 추가
 
   const handleCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -21,7 +23,8 @@ function Header() {
           const lon = position.coords.longitude;
 
           fetch(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY_OPENWEATHERMAP
+            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
+              import.meta.env.VITE_API_KEY_OPENWEATHERMAP
             }`,
           )
             .then((response) => response.json())
@@ -47,6 +50,10 @@ function Header() {
     setShowFortune(true); // 모달을 열 때마다 true로 설정
   };
 
+  const toggleSearchCountryModal = () => {
+    setShowSearchCountryModal(true); // SearchCountryModal 열기
+  };
+
   return (
     <>
       <nav className="my-4 flex items-center justify-between pr-6">
@@ -55,6 +62,14 @@ function Header() {
         </div>
 
         <div className="mx-auto flex items-center gap-2">
+          {/* SearchCountryModal 버튼 추가 */}
+          <button
+            onClick={toggleSearchCountryModal}
+            className="ml-2 rounded bg-gray-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-600"
+          >
+            도시 선택
+          </button>
+
           <SearchBar />
           <button
             onClick={handleCurrentLocation}
@@ -64,7 +79,7 @@ function Header() {
           </button>
           <button
             onClick={toggleFortune}
-            className="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors"
+            className="ml-2 rounded bg-blue-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-600"
           >
             오늘의 운세
           </button>
@@ -75,13 +90,13 @@ function Header() {
       <div className="flex gap-2 px-6 py-4 text-lg font-semibold sm:px-0">
         <Link to="/weather-app-vite/">
           <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-            Today
+            오늘의날씨
           </button>
         </Link>
 
         <Link to="forecast">
           <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-            Next 5 days
+            앞으로 5일
           </button>
         </Link>
 
@@ -92,7 +107,15 @@ function Header() {
         </Link>
       </div>
 
-      {showFortune && <FortuneRecommendation onClose={() => setShowFortune(false)} />}
+      {/* FortuneRecommendation 모달 */}
+      {showFortune && (
+        <FortuneRecommendation onClose={() => setShowFortune(false)} />
+      )}
+
+      {/* SearchCountryModal 모달 */}
+      {showSearchCountryModal && (
+        <SearchCountryModal onClose={() => setShowSearchCountryModal(false)} />
+      )}
     </>
   );
 }
