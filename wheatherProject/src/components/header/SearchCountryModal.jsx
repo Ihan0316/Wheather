@@ -16,6 +16,14 @@ const cityNameMap = {
   멜버른: 'Melbourne',
   카이로: 'Cairo',
   케이프타운: 'Cape Town',
+  나이로비:'Nairobi',
+  웰링턴:'Wellington',
+  오클랜드:'Auckland',
+  마드리드:'Madrid',
+  샌프란시스코:'San Francisco',
+  라고스:'Lagos',
+  베이징:'Beijing',
+
 };
 
 const reverseCityNameMap = Object.fromEntries(
@@ -27,22 +35,27 @@ const locationData = {
   아시아: {
     한국: ['서울', '부산'],
     일본: ['도쿄'],
+    중국: ['베이징'],
   },
   유럽: {
     영국: ['런던'],
     프랑스: ['파리'],
     독일: ['베를린'],
+    스페인 : ['마드리드'],
   },
   북아메리카: {
-    미국: ['로스앤젤레스', '뉴욕'],
+    미국: ['로스앤젤레스', '뉴욕','샌프란시스코'],
     캐나다: ['밴쿠버'],
   },
   오세아니아: {
     호주: ['시드니', '멜버른'],
+    뉴질랜드: ['오클랜드','웰링턴'],
   },
   아프리카: {
     이집트: ['카이로'],
     남아프리카공화국: ['케이프타운'],
+    케냐:['나이로비'],
+    나이지리아:['라고스']
   },
 };
 
@@ -75,7 +88,8 @@ export const SearchCountryModal = ({ onClose }) => {
     // 한글 도시명을 영어로 변환 (없으면 원래 한글 그대로 사용)
     const cityName = cityNameMap[city] || city;
     const encodedCity = encodeURIComponent(cityName);
-    const apiKey = 'bc106837b247d0f3d297cc17db1171e7'; // 자기 api 키 찾아서 무조건 넣어야함!!!! 아니면 console 에 오류 뜸 !
+    const apiKey =  import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
+    // 자기 api 키 찾아서 무조건 넣어야함!!!! 아니면 console 에 오류 뜸 !
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&appid=${apiKey}&units=metric&lang=kr`;
 
     try {
