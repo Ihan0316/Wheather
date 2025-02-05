@@ -174,6 +174,12 @@ function SearchBar() {
                      dark:placeholder-gray-400 sm:text-sm"
           value={city}
           onChange={(e) => setCity(e.target.value)}
+          // 엔터 키를 누를 때 handleSearch 호출
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
         />
         <button
           onClick={handleSearch}
