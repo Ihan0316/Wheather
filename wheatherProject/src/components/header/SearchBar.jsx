@@ -114,7 +114,7 @@ function SearchBar() {
     오클랜드: 'Auckland',
     웰링턴: 'Wellington',
     // 필요에 따라 더 많은 도시 추가
-  }; //일단은 도시 수가 몇만개가 되어서 일단은 정적으로 40개 정도만 넣어뒀음
+  };
 
   // "Get Weather" 버튼 클릭 시 실행될 함수
   const handleSearch = async () => {
@@ -170,10 +170,7 @@ function SearchBar() {
         <input
           type="text"
           placeholder="도시를 입력해주세요"
-          className="w-full rounded-lg bg-neutral-50 px-4 py-2.5
-                     text-gray-900 placeholder-gray-500 outline-none 
-                     focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 
-                     dark:placeholder-gray-400 sm:text-sm"
+          className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
           value={city}
           onChange={(e) => setCity(e.target.value)}
           // 엔터 키를 누를 때 handleSearch 호출
@@ -185,7 +182,7 @@ function SearchBar() {
         />
         <button
           onClick={handleSearch}
-          className="whitespace-nowrap rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="whitespace-nowrap rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
         >
           검색
         </button>

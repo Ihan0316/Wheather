@@ -65,7 +65,7 @@ function Header() {
           {/* SearchCountryModal 버튼 추가 */}
           <button
             onClick={toggleSearchCountryModal}
-            className="ml-2 rounded bg-green-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-600"
+            className="ml-2 rounded bg-gray-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-600"
           >
             도시 선택
           </button>
