@@ -185,25 +185,25 @@ export const SearchCountryModal = ({ onClose }) => {
               </h3>
               <div className="space-y-2 text-sm leading-6">
                 <div className="flex justify-between">
-                  <span className="font-medium">도시:</span>
+                  <span className="font-medium">🗽 도시:</span>
                   <span>
                     {reverseCityNameMap[weatherData.name] || weatherData.name}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">온도:</span>
-                  <span>{weatherData.main.temp}°C</span>
+                  <span className="font-medium">🌡️ 온도:</span>
+                  <span>{Math.round(weatherData.main.temp)}°C</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">날씨:</span>
+                  <span className="font-medium">🌈 날씨:</span>
                   <span>{weatherData.weather[0].description}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">습도:</span>
+                  <span className="font-medium">🌫️ 습도:</span>
                   <span>{weatherData.main.humidity}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">풍속:</span>
+                  <span className="font-medium">💨 풍속:</span>
                   <span>{weatherData.wind.speed} m/s</span>
                 </div>
               </div>
