@@ -190,10 +190,10 @@ export default function FortuneRecommendation({ onClose }) {
         currentHour >= 5 && currentHour < 12
           ? '아침'
           : currentHour >= 12 && currentHour < 18
-          ? '오후'
-          : currentHour >= 18 && currentHour < 22
-          ? '저녁'
-          : '밤';
+            ? '오후'
+            : currentHour >= 18 && currentHour < 22
+              ? '저녁'
+              : '밤';
 
       const fortuneText = `
         [${new Date().toLocaleDateString()} ${timeOfDay} 운세]
@@ -201,35 +201,31 @@ export default function FortuneRecommendation({ onClose }) {
         ${weather.text} ${mbtiTrait} 당신의 운세를 알려드립니다.
 
         [기본 성향]
-        당신은 ${energy}의 기운을 가진 ${genderAspects[0]}과(와) ${
-        genderAspects[1]
-      }이(가) 돋보이는 성향입니다.
+        당신은 ${energy}의 기운을 가진 ${genderAspects[0]}과(와) ${genderAspects[1]
+        }이(가) 돋보이는 성향입니다.
         현재 ${weather.energy} 에너지가 당신을 감싸고 있습니다.
 
         [오늘의 운세]
-        ${monthlyAspects[0]}과(와) ${
-        monthlyAspects[1]
-      }이(가) 조화를 이루는 시기입니다.
+        ${monthlyAspects[0]}과(와) ${monthlyAspects[1]
+        }이(가) 조화를 이루는 시기입니다.
         특히 ${genderAspects[2]}을(를) 발휘하면 좋은 결과가 있을 것입니다.
 
         [날씨와 운세]
         현재 기온 ${temp}℃의 ${weatherMain} 날씨는
-        ${
-          temp < 15
-            ? '차분히 내면을 돌아보며 신중하게 행동하기 좋은 날입니다.'
-            : '적극적으로 자신의 의견을 표현하고 행동하기 좋은 날입니다.'
+        ${temp < 15
+          ? '차분히 내면을 돌아보며 신중하게 행동하기 좋은 날입니다.'
+          : '적극적으로 자신의 의견을 표현하고 행동하기 좋은 날입니다.'
         }
 
         [행운의 시간]
-        ${timeOfDay}에는 ${
-        timeOfDay === '아침'
+        ${timeOfDay}에는 ${timeOfDay === '아침'
           ? '새로운 시작을 계획하는 것이 좋습니다.'
           : timeOfDay === '오후'
-          ? '적극적인 활동이 행운을 가져올 것입니다.'
-          : timeOfDay === '저녁'
-          ? '사람들과의 교류가 좋은 기회를 만들어낼 것입니다.'
-          : '충분한 휴식을 취하며 내일을 준비하세요.'
-      }
+            ? '적극적인 활동이 행운을 가져올 것입니다.'
+            : timeOfDay === '저녁'
+              ? '사람들과의 교류가 좋은 기회를 만들어낼 것입니다.'
+              : '충분한 휴식을 취하며 내일을 준비하세요.'
+        }
       `;
 
       setFortune(fortuneText);
