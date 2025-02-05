@@ -8,6 +8,7 @@ import "./index.css";
 
 const Home = lazy(() => import("./routes/Home"));
 const Forecast = lazy(() => import("./routes/Forecast"));
+const Favorite = lazy(() => import("./routes/Favorite"));
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         path: "forecast",
         element: <Forecast />,
       },
+      {
+        path: "favorite",
+        element: <Favorite />,
+      }
     ],
   },
   {

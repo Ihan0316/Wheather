@@ -84,6 +84,12 @@ function Header() {
             Next 5 days
           </button>
         </Link>
+
+        <Link to="favorite">
+          <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
+            즐겨 찾기
+          </button>
+        </Link>
       </div>
 
       {showFortune && <FortuneRecommendation onClose={() => setShowFortune(false)} />}
