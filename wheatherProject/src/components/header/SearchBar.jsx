@@ -111,6 +111,8 @@ function SearchBar() {
     포르투갈: 'Lisbon',
     리스본: 'Lisbon',
     미나스제라이스: 'Minas Gerais',
+    오클랜드: 'Auckland',
+    웰링턴:'Wellington'
     // 필요에 따라 더 많은 도시 추가
   }; //일단은 도시 수가 몇만개가 되어서 일단은 정적으로 40개 정도만 넣어뒀음
 

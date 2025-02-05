@@ -68,6 +68,7 @@ function OtherCities() {
       geolocation: { lat: '49.2827', lng: '123.1207' },
       continent: '북아메리카',
     },
+    
     {
       city: '카이로',
       country: '이집트',
@@ -80,13 +81,57 @@ function OtherCities() {
       geolocation: { lat: '33.9249', lng: '18.4241' },
       continent: '아프리카',
     },
-
     {
       city: '멜버른',
       country: '호주',
       geolocation: { lat: '37.8136', lng: '144.9631' },
       continent: '오세아니아',
     },
+     {
+      city: '베이징',
+      country: '중국',
+      geolocation: { lat: '39.9042', lng: '116.4074' },
+      continent: '아시아',
+    },
+    {
+      city: '마드리드',
+      country: '스페인',
+      geolocation: { lat: '40.4168', lng: '3.7038' },
+      continent: '유럽',
+    },
+    {
+      city: '샌프란시스코',
+      country: '미국',
+      geolocation: { lat: '37.7749', lng: '122.4194' },
+      continent: '북아메리카',
+    },
+    {
+      city: '오클랜드',
+      country: '뉴질랜드',
+      geolocation: { lat: '-36.8485', lng: '174.7633' },
+      continent: '오세아니아',
+    },
+    {
+      city: '웰링턴',
+      country: '뉴질랜드',
+      geolocation: { lat: '-41.2867', lng: '174.7752' },
+      continent: '오세아니아',
+    },
+    {
+      city: '나이로비',
+      country: '케냐',
+      geolocation: { lat: '1.2867', lng: '36.8219' },
+      continent: '아프리카',
+    },
+    {
+      city: '라고스',
+      country: '나이지리아',
+      geolocation: { lat: '6.5244', lng: '3.3792' },
+      continent: '아프리카',
+    },
+
+    
+  
   ];
 
   // 대륙별로 도시들을 분류
@@ -105,16 +150,8 @@ function OtherCities() {
       lng: city.geolocation.lng,
     });
 
-    
     return { data, isSuccess, isLoading };
   });
-
-  // const citiesByContinent2 = continents.map((continent) => {
-  //   citiesByContinent[continent].map((city) => {
-  //     console.log(data)
-  //     dataMap.push(data?.filter((info) => info.data.coord.lat === city.geolocation.lat));
-  //   })
-  // });
 
   const handleClick = (city) => {
     // Save geolocation to redux store
@@ -135,21 +172,22 @@ function OtherCities() {
     <main className="container mx-auto">
       <div className="flex flex-col md:flex-row">
         <div className="p-6 sm:p-0 md:w-full">
+          {/* 다른도시 텍스트 부분 수정 */}
           <div
-            className="mb-4 font-semibold"
+            className="mb-4 font-semibold text-center border-b-2 py-2"
             style={{
               fontSize: '28px',
-              marginTop: '10px',
+              marginTop: '100px',
               marginBottom: '25px',
             }}
           >
-            다른도시
           </div>
+        
 
           {/* 대륙별로 도시들 렌더링 */}
           {continents.map((continent) => (
             <div key={continent} className="mb-8">
-              <div className="mb-4 text-xl font-semibold">{continent}</div>
+              <div className="mb-4 text-xl font-semibold text-center">{continent}</div>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {citiesByContinent[continent].map((city, i) => (
                   <div
