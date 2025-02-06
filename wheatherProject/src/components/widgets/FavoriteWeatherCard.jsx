@@ -1,20 +1,16 @@
-import { useSelector } from "react-redux";
 import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
 import WeatherIcon from "../common/WeatherIcon";
 import { TiLocationArrow } from "react-icons/ti";
+import axios from "axios";
 
-function FavoriteWeatherCard({lat, lng}) {
-  // const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
-  // const { data, isSuccess } = useGetCurrentWeatherQuery({
-  //   lat,
-  //   lng,
-  // });
 
+
+function FavoriteWeatherCard({ lat, lng }) {
   const { data, isSuccess } = useGetCurrentWeatherQuery({
     lat: lat,    // props로 전달된 lat, lng 사용
     lng: lng,
   });
-  
+
   function convertToDate(timezone, dt) {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
@@ -46,6 +42,35 @@ function FavoriteWeatherCard({lat, lng}) {
     });
     return local_time_format;
   }
+ 
+  //데이터 저장
+  const saveFavorite = async () => {
+    const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/api/weather`,
+        {
+          city: data.name,
+          latitude: lat,
+          longitude: lng,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 👈 인증 정보 포함 (CORS 문제 방지)
+        }
+      );
+
+      console.log("저장 완료:", response.data);
+      alert(`${data.name}이(가) 즐겨찾기에 추가되었습니다.`);
+    } catch (error) {
+      console.error("저장 실패:", error);
+      alert("즐겨찾기 추가 중 오류가 발생했습니다.");
+    }
+  };
+
+ 
 
   return (
     <>
@@ -72,6 +97,7 @@ function FavoriteWeatherCard({lat, lng}) {
                   <div className="font-semibold">{item.name}</div>
                   <TiLocationArrow />
                 </div>
+
                 <div className="font-KardustBold text-8xl">
                   {Math.round(item.main.temp)}&deg;
                 </div>
@@ -85,14 +111,9 @@ function FavoriteWeatherCard({lat, lng}) {
                 />
               </div>
             </div>
+
             {/* PARAMETERS */}
             <div className="mt-8 flex flex-row justify-between">
-              {/* <div>{item.weather[0].description}</div>
-                <div className="flex flex-row gap-1">
-                  <div>H:{Math.round(item.main.temp_max)}&deg;</div>
-                  <div>L:{Math.round(item.main.temp_min)}</div>
-                </div> */}
-
               <div className="flex flex-col gap-1">
                 <div className="flex flex-row gap-1">
                   <div>체감온도</div>
@@ -129,7 +150,13 @@ function FavoriteWeatherCard({lat, lng}) {
                 </div>
               </div>
             </div>
+            {/* <div className="temp">{Math.round(data.main.temp)}°</div> */}
+            <WeatherIcon iconType={data.weather[0].icon} size={50} />
+            <button onClick={saveFavorite} className="save-btn">
+              즐겨찾기 추가
+            </button>
           </div>
+
         ))}
     </>
   );
