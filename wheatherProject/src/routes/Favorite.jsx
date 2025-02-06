@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FavoriteWeatherCard from '../components/widgets/FavoriteWeatherCard';
 import HourlyForecast from '../components/widgets/HourlyForecast';
 import axios from 'axios';
 import { cityTranslationMap } from '../utils/cityTranslations';
+import { use } from 'react';
 
 function Favorite() {
   const [cities, setCities] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [weather, setweather] = useState([]);
 
   const fetchCityCoordinates = async (cityName) => {
     const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
@@ -51,6 +53,31 @@ function Favorite() {
       alert('도시를 찾을 수 없습니다.');
     }
   };
+
+  const getFavorite = async () => {
+    const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+    try {
+      const response = await axios.get(
+        `${SERVER_URL}/api/weather`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 👈 인증 정보 포함 (CORS 문제 방지)
+        }
+      );
+
+      console.log("조회 완료:", response.data);
+      setweather(response.data);
+    } catch (error) {
+      console.error("저장 실패:", error);
+      alert("즐겨찾기 추가 중 오류가 발생했습니다.");
+    }
+  };
+
+  useEffect(() => {
+    getFavorite();
+  }, []);
 
   return (
     <main className="container mx-auto">
@@ -99,6 +126,18 @@ function Favorite() {
               className="w-full p-4 sm:w-1/3 lg:w-1/4"
             >
               <FavoriteWeatherCard lat={city.lat} lng={city.lng} />
+            </div>
+          ))}
+        </div>
+        
+        <div>즐겨찾기 목록</div>
+        <div className="flex flex-wrap gap-4">
+          {weather.map((city, i) => (
+            <div
+              key={`${city.latitude}-${city.longitude}`}
+              className="w-full p-4 sm:w-1/3 lg:w-1/4"
+            >
+              <FavoriteWeatherCard lat={city.latitude} lng={city.longitude} />
             </div>
           ))}
         </div>
