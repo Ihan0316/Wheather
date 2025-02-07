@@ -2,12 +2,8 @@ import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
 import WeatherIcon from '../common/WeatherIcon';
 import { TiLocationArrow } from 'react-icons/ti';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 
 function FavoriteWeatherCard({ lat, lng, isFavorite, id, setWeather }) {
-  const user = useSelector((state) => state.user); // ✅ 컴포넌트 최상단에서 선언
-  const { accessToken } = useSelector((state) => state.auth);
-
   const { data, isSuccess } = useGetCurrentWeatherQuery({
     lat: lat, // props로 전달된 lat, lng 사용
     lng: lng,
@@ -45,54 +41,40 @@ function FavoriteWeatherCard({ lat, lng, isFavorite, id, setWeather }) {
     return local_time_format;
   }
 
-  // const saveFavorite = async () => {
-  //   const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
-  //   try {
-  //     const response = await axios.post(`${SERVER_URL}/api/weather`, {
-  //       city: data.name,
-  //       latitude: lat,
-  //       longitude: lng,
-  //     });
-
-  //     if (response.data === "이미 등록된 즐겨찾기 도시입니다.") {
-  //       alert('이미 등록된 즐겨찾기 도시입니다.');
-  //     } else {
-  //       alert(`${data.name}이(가) 즐겨찾기에 추가되었습니다.`);
-  //     }
-  //   } catch (error) {
-  //     alert("즐겨찾기 추가 중 오류가 발생했습니다.");
-  //   }
-  // };
-
   const saveFavorite = async () => {
-    if (!accessToken) {
-      alert('로그인이 필요합니다.');
-      return;
-    }
-
+    const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
+      const token = localStorage.getItem('token');
+
       const response = await axios.post(
-        'http://localhost:8080/api/weather',
+        `${SERVER_URL}/api/weather`,
         {
-          city: data?.name,
+          country: data.sys.country, // 국가 정보 추가
+          city: data.name,
           latitude: lat,
           longitude: lng,
         },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
+          withCredentials: true,
         },
       );
+
       if (response.data === '이미 등록된 즐겨찾기 도시입니다.') {
         alert('이미 등록된 즐겨찾기 도시입니다.');
       } else {
         alert(`${data.name}이(가) 즐겨찾기에 추가되었습니다.`);
       }
-      console.log('즐겨찾기 저장 성공:', response.data);
     } catch (error) {
-      console.error('즐겨찾기 추가 중 오류 발생:', error);
+      if (error.response && error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+      } else {
+        console.error('저장 실패:', error);
+        alert('즐겨찾기 추가 중 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -109,17 +91,24 @@ function FavoriteWeatherCard({ lat, lng, isFavorite, id, setWeather }) {
   const deleteFavorite = async () => {
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
+      const token = localStorage.getItem('token');
+
       await axios.delete(`${SERVER_URL}/api/weather/${id}`, {
-        withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
+        withCredentials: true,
       });
 
       setWeather((prevWeather) => prevWeather.filter((city) => city.id !== id));
     } catch (error) {
-      console.error('삭제 실패:', error);
-      alert('삭제 중 오류가 발생했습니다.');
+      if (error.response && error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+      } else {
+        console.error('삭제 실패:', error);
+        alert('삭제 중 오류가 발생했습니다.');
+      }
     }
   };
 

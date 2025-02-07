@@ -77,7 +77,7 @@ public class CustomSecurityConfig {
         APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken"); // 로그인 엔드포인트 설정
         apiLoginFilter.setAuthenticationManager(authenticationManager); // APILoginFilter에서 사용할 AuthenticationManager 설정
 
-  // APILoginSuccessHandler 생성: 인증 성공 후 처리 로직을 담당
+        // APILoginSuccessHandler 생성: 인증 성공 후 처리 로직을 담당
         // 교체
         APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
 
@@ -108,14 +108,6 @@ public class CustomSecurityConfig {
         http.cors(httpSecurityCorsConfigurer ->
                 httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource())
         );
-
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/generateToken", "/refreshToken").permitAll() // 토큰 관련 요청은 허용
-                .requestMatchers("/api/weather").authenticated() // 인증 필요
-                .anyRequest().permitAll() // 나머지 요청은 허용
-        );
-
-
 
 // SecurityFilterChain 반환
         return http.build(); // Security 필터 체인을 빌드하여 반환
