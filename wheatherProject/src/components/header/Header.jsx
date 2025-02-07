@@ -22,6 +22,7 @@ function Header() {
   const [showSearchCountryModal, setShowSearchCountryModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const location = window.location.pathname;
 
   // 일반 기능 – 현재 위치 가져오기
   const handleCurrentLocation = () => {
@@ -161,7 +162,13 @@ function Header() {
             }
           }}
         >
-          <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
+          <button
+            className={`rounded-lg px-4 py-2 ${
+              location === '/weather-app-vite/' || location === '/'
+                ? 'bg-neutral-200 dark:bg-neutral-800'
+                : 'hover:bg-neutral-200 hover:dark:bg-neutral-800'
+            }`}
+          >
             오늘의날씨
           </button>
         </Link>
@@ -175,7 +182,13 @@ function Header() {
             }
           }}
         >
-          <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
+          <button
+            className={`rounded-lg px-4 py-2 ${
+              location.includes('forecast')
+                ? 'bg-neutral-200 dark:bg-neutral-800'
+                : 'hover:bg-neutral-200 hover:dark:bg-neutral-800'
+            }`}
+          >
             앞으로 5일
           </button>
         </Link>
@@ -189,7 +202,13 @@ function Header() {
             }
           }}
         >
-          <button className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
+          <button
+            className={`rounded-lg px-4 py-2 ${
+              location.includes('favorite')
+                ? 'bg-neutral-200 dark:bg-neutral-800'
+                : 'hover:bg-neutral-200 hover:dark:bg-neutral-800'
+            }`}
+          >
             즐겨찾기
           </button>
         </Link>
