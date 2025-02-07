@@ -1,3 +1,4 @@
+// src/components/auth/LoginModal.js
 import React, { useState } from 'react';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
@@ -10,7 +11,10 @@ const LoginModal = ({ onClose }) => {
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
-        setCredentialsState({ ...credentials, [e.target.name]: e.target.value });
+        setCredentialsState({
+            ...credentials,
+            [e.target.name]: e.target.value,
+        });
     };
 
     const handleKeyDown = (e) => {
@@ -25,26 +29,32 @@ const LoginModal = ({ onClose }) => {
             console.log("Received token data:", data);
             console.log("AccessToken string:", data.accessToken);
 
+            // 토큰 형식 검증
             if (!data.accessToken || data.accessToken.split('.').length !== 3) {
                 throw new Error("토큰 형식이 올바르지 않습니다!");
             }
 
+            // jwt-decode 모듈을 동적으로 import하여 토큰 디코딩
             const { jwtDecode } = await import('jwt-decode');
             const decoded = jwtDecode(data.accessToken);
             console.log('Decoded token:', decoded);
 
-            dispatch(
-                setCredentials({
-                    user: {
-                        mid: decoded.mid,
-                        birthdate: decoded.birthdate,
-                        mbti: decoded.mbti,
-                        gender: decoded.gender,
-                    },
-                    accessToken: data.accessToken,
-                    refreshToken: data.refreshToken,
-                })
-            );
+            const authData = {
+                user: {
+                    mid: decoded.mid,
+                    birthdate: decoded.birthdate,
+                    mbti: decoded.mbti,
+                    gender: decoded.gender,
+                },
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+            };
+
+            // Redux store 에 저장
+            dispatch(setCredentials(authData));
+            // localStorage 에 저장하여 새로고침 후에도 로그인 상태 유지
+            localStorage.setItem('auth', JSON.stringify(authData));
+
             onClose();
         } catch (err) {
             console.error('로그인 처리 중 오류:', err);
