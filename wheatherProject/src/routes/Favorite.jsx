@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import FavoriteWeatherCard from '../components/widgets/FavoriteWeatherCard';
 import axios from 'axios';
 import { cityTranslationMap } from '../utils/cityTranslations';
+import { Provider } from 'react-redux';
 
 function Favorite() {
   const [cities, setCities] = useState([]);
@@ -37,6 +38,7 @@ function Favorite() {
     }
 
     try {
+      console.log(`도시 정보 조회 요청: ${cityName}`);
       const cityData = await fetchCityCoordinates(cityName);
       if (cityData.cod === 200) {
         const newCity = {
@@ -46,36 +48,28 @@ function Favorite() {
           lng: cityData.coord.lon,
         };
         setCities([...cities, newCity]);
+        console.log(`서버로 즐겨찾기 추가 요청:`, newCity);
       }
     } catch (error) {
-      alert('도시를 찾을 수 없습니다.');
+      console.error('도시를 찾을 수 없습니다.', error);
     }
   };
 
   const getFavorite = async () => {
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
-      const token = localStorage.getItem('token'); // 토큰 가져오기
-
       const response = await axios.get(`${SERVER_URL}/api/weather`, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Authorization 헤더 추가
         },
-        withCredentials: true,
+        withCredentials: true, // 👈 인증 정보 포함 (CORS 문제 방지)
       });
 
       console.log('조회 완료:', response.data);
       setweather(response.data);
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert('로그인이 필요한 서비스입니다.');
-        // 필요한 경우 로그인 페이지로 리다이렉트
-        // window.location.href = '/login';
-      } else {
-        console.error('조회 실패:', error);
-        alert('즐겨찾기 조회 중 오류가 발생했습니다.');
-      }
+      console.error('저장 실패:', error);
+      alert('즐겨찾기 추가 중 오류가 발생했습니다.');
     }
   };
 
@@ -154,13 +148,13 @@ function Favorite() {
               key={`${city.latitude}-${city.longitude}`}
               className="w-full p-4 sm:w-1/3 lg:w-1/4"
             >
-              <FavoriteWeatherCard
-                lat={city.latitude}
-                lng={city.longitude}
-                isFavorite={true}
-                id={city.id}
-                setWeather={setweather}
-              />
+              <Provider store={store}>
+                <FavoriteWeatherCard
+                  lat={city.latitude}
+                  lng={city.longitude}
+                  isFavorite={true}
+                />
+              </Provider>
             </div>
           ))}
         </div>

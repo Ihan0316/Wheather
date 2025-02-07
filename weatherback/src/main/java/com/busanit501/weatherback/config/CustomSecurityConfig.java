@@ -109,6 +109,14 @@ public class CustomSecurityConfig {
                 httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource())
         );
 
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/generateToken", "/refreshToken").permitAll() // 토큰 관련 요청은 허용
+                .requestMatchers("/api/weather").authenticated() // 인증 필요
+                .anyRequest().permitAll() // 나머지 요청은 허용
+        );
+
+
+
 // SecurityFilterChain 반환
         return http.build(); // Security 필터 체인을 빌드하여 반환
     }
