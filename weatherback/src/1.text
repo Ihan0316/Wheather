@@ -1,0 +1,527 @@
+import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
+import WeatherIcon from '../common/WeatherIcon';
+import { TiLocationArrow } from 'react-icons/ti';
+import axios from 'axios';
+
+function FavoriteWeatherCard({ lat, lng, isFavorite, id, setWeather }) {
+  const { data, isSuccess } = useGetCurrentWeatherQuery({
+    lat: lat, // props로 전달된 lat, lng 사용
+    lng: lng,
+  });
+
+  function convertToDate(timezone, dt) {
+    let utc_time = new Date(dt * 1000);
+    let local_time = new Date(utc_time.getTime() + timezone * 1000);
+    let local_time_Day = local_time.toLocaleString('ko-KR', {
+      timeZone: 'UTC',
+      weekday: 'long',
+    });
+    return local_time_Day;
+  }
+
+  function convertToHMin(dt) {
+    let time = new Date(dt * 1000).toLocaleTimeString('ko-KR', {
+      timeZone: 'UTC',
+      hour12: true,
+      hour: 'numeric',
+      minute: 'numeric',
+    });
+    return time;
+  }
+
+  function getLocalTime(timezone, dt) {
+    let utc_time = new Date(dt * 1000);
+    let local_time = new Date(utc_time.getTime() + timezone * 1000);
+    let local_time_format = local_time.toLocaleTimeString('ko-KR', {
+      timeZone: 'UTC',
+      hour12: true,
+      hour: 'numeric',
+      minute: 'numeric',
+    });
+    return local_time_format;
+  }
+
+  const saveFavorite = async () => {
+    const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+    try {
+      const token = localStorage.getItem('token');
+
+      const response = await axios.post(
+        `${SERVER_URL}/api/weather`,
+        {
+          country: data.sys.country, // 국가 정보 추가
+          city: data.name,
+          latitude: lat,
+          longitude: lng,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        },
+      );
+
+      if (response.data === '이미 등록된 즐겨찾기 도시입니다.') {
+        alert('이미 등록된 즐겨찾기 도시입니다.');
+      } else {
+        alert(`${data.name}이(가) 즐겨찾기에 추가되었습니다.`);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+      } else {
+        console.error('저장 실패:', error);
+        alert('즐겨찾기 추가 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  // const deleteFavorite = async (id) => {
+  //   const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+  //   try {
+  //     await axios.delete(`${SERVER_URL}/api/weather/${id}`);
+  //     onDelete();  // 부모 컴포넌트에 알리기
+  //   } catch (error) {
+  //     alert("즐겨찾기 삭제 중 오류가 발생했습니다.");
+  //   }
+  // };
+
+  const deleteFavorite = async () => {
+    const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+    try {
+      const token = localStorage.getItem('token');
+
+      await axios.delete(`${SERVER_URL}/api/weather/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      setWeather((prevWeather) => prevWeather.filter((city) => city.id !== id));
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+      } else {
+        console.error('삭제 실패:', error);
+        alert('삭제 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  return (
+    <>
+      {isSuccess &&
+        [data].map((item, i) => (
+          <div
+            key={i}
+            className="mb-4 h-[21rem] overflow-hidden rounded-3xl bg-white p-6 shadow-lg dark:bg-neutral-800"
+          >
+            {/* DAY AND TIME */}
+            <div className="flex flex-row justify-between">
+              <div className="text-xl font-semibold">
+                {convertToDate(item.timezone, item.dt)}
+              </div>
+              <div className="font-KardustBold text-xl">
+                {getLocalTime(item.timezone, item.dt)}
+              </div>
+            </div>
+            {/*  */}
+
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex flex-row">
+                  <div className="font-semibold">{item.name}</div>
+                  <TiLocationArrow />
+                </div>
+
+                <div className="font-KardustBold text-8xl">
+                  {Math.round(item.main.temp)}&deg;
+                </div>
+              </div>
+
+              <div className="h-36 w-36 pt-5">
+                <WeatherIcon
+                  iconType={item.weather[0].icon}
+                  id={item.weather[0].id}
+                  size={36}
+                />
+              </div>
+            </div>
+
+            {/* PARAMETERS */}
+            <div className="mt-8 flex flex-row justify-between">
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-row gap-1">
+                  <div>체감온도</div>
+                  <div className="font-KardustBold">
+                    {Math.round(item.main.feels_like)}&deg;
+                  </div>
+                </div>
+                <div className="flex flex-row gap-1">
+                  <div>풍속</div>
+                  <div className="font-KardustBold">
+                    {Math.round(item.wind.speed)} m/s
+                  </div>
+                </div>
+
+                <div className="flex flex-row gap-1">
+                  <div>습도</div>
+                  <div className="font-KardustBold">{item.main.humidity}%</div>
+                </div>
+              </div>
+              <div className="ml-1 self-end">
+                <div className="flex flex-col gap-1">
+                  <div className="flex flex-row gap-1">
+                    <div>일출</div>
+                    <div className="font-KardustBold">
+                      {getLocalTime(item.timezone, item.sys.sunrise)}
+                    </div>
+                  </div>
+                  <div className="flex flex-row gap-1">
+                    <div>일몰</div>
+                    <div className="font-KardustBold">
+                      {getLocalTime(item.timezone, item.sys.sunset)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <WeatherIcon iconType={data.weather[0].icon} size={50} />
+
+            <div className="flex justify-end">
+              {isFavorite ? (
+                <button onClick={deleteFavorite} className="text-red-500">
+                  즐겨찾기 삭제
+                </button>
+              ) : (
+                <button onClick={saveFavorite} className="text-green-500">
+                  즐겨찾기 추가
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+    </>
+  );
+}
+export default FavoriteWeatherCard;
+
+
+
+
+
+
+import { useEffect, useState } from 'react';
+import FavoriteWeatherCard from '../components/widgets/FavoriteWeatherCard';
+import axios from 'axios';
+import { cityTranslationMap } from '../utils/cityTranslations';
+
+function Favorite() {
+  const [cities, setCities] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [weather, setweather] = useState([]);
+
+  const fetchCityCoordinates = async (cityName) => {
+    const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
+    // 한글 도시명을 영문으로 변환
+    const englishCityName = cityTranslationMap[cityName] || cityName;
+
+    try {
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${englishCityName}&appid=${apiKey}&units=metric&lang=kr`,
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleAddCity = async (cityName) => {
+    // 도시명이 cityTranslationMap에 없는 경우 에러 처리
+    if (!cityTranslationMap[cityName]) {
+      alert('도시 목록에서 선택해주세요.');
+      return;
+    }
+
+    const existingCity = cities.find((city) => city.name === cityName);
+    if (existingCity) {
+      alert('이미 추가된 도시입니다.');
+      return;
+    }
+
+    try {
+      const cityData = await fetchCityCoordinates(cityName);
+      if (cityData.cod === 200) {
+        const newCity = {
+          name: cityName, // 한글 도시명 저장
+          englishName: cityTranslationMap[cityName] || cityName, // 영문 도시명 저장
+          lat: cityData.coord.lat,
+          lng: cityData.coord.lon,
+        };
+        setCities([...cities, newCity]);
+      }
+    } catch (error) {
+      alert('도시를 찾을 수 없습니다.');
+    }
+  };
+
+  const getFavorite = async () => {
+    const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+    try {
+      const token = localStorage.getItem('token'); // 토큰 가져오기
+
+      const response = await axios.get(`${SERVER_URL}/api/weather`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Authorization 헤더 추가
+        },
+        withCredentials: true,
+      });
+
+      console.log('조회 완료:', response.data);
+      setweather(response.data);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+        // 필요한 경우 로그인 페이지로 리다이렉트
+        // window.location.href = '/login';
+      } else {
+        console.error('조회 실패:', error);
+        alert('즐겨찾기 조회 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  // const deleteFavorite = async (id) => {
+  //   try {
+  //     await axios.delete(`${SERVER_URL}/api/weather/${id}`, {
+  //       withCredentials: true,
+  //     });
+
+  //     setWeather(weather.filter((city) => city.id !== id)); // 상태에서 삭제된 데이터 제거
+  //   } catch (error) {
+  //     console.error("삭제 실패:", error);
+  //     alert("삭제 중 오류가 발생했습니다.");
+  //   }
+  // };
+
+  useEffect(() => {
+    getFavorite();
+  }, []);
+
+  return (
+    <main className="container mx-auto">
+      <div className="flex flex-col gap-4">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="도시 이름을 입력하고 목록에서 선택하세요"
+            className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                if (cityTranslationMap[searchTerm]) {
+                  handleAddCity(searchTerm);
+                  e.preventDefault(); // IME 이벤트 방지
+                  e.target.value = ''; // 입력창 직접 초기화
+                  setSearchTerm(''); // 상태 초기화
+                }
+              }
+            }}
+          />
+          {searchTerm && (
+            <div className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white">
+              {Object.keys(cityTranslationMap)
+                .filter((city) => city.includes(searchTerm))
+                .map((city) => (
+                  <div
+                    key={city}
+                    className="cursor-pointer p-2 hover:bg-gray-100"
+                    onClick={() => {
+                      handleAddCity(city);
+                      setSearchTerm('');
+                    }}
+                  >
+                    {city}
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-4">
+          {cities.map((city, i) => (
+            <div
+              key={`${city.lat}-${city.lng}`}
+              className="w-full p-4 sm:w-1/3 lg:w-1/4"
+            >
+              <FavoriteWeatherCard lat={city.lat} lng={city.lng} />
+            </div>
+          ))}
+        </div>
+
+        <div>즐겨찾기 목록</div>
+        <div className="flex flex-wrap gap-4">
+          {weather.map((city, i) => (
+            <div
+              key={`${city.latitude}-${city.longitude}`}
+              className="w-full p-4 sm:w-1/3 lg:w-1/4"
+            >
+              <FavoriteWeatherCard
+                lat={city.latitude}
+                lng={city.longitude}
+                isFavorite={true}
+                id={city.id}
+                setWeather={setweather}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default Favorite;
+
+
+
+
+
+
+package com.busanit501.weatherback.config;
+
+import com.busanit501.weatherback.security.APIUserDetailsService;
+import com.busanit501.weatherback.security.filter.APILoginFilter;
+import com.busanit501.weatherback.security.filter.RefreshTokenFilter;
+import com.busanit501.weatherback.security.filter.TokenCheckFilter;
+import com.busanit501.weatherback.security.handler.APILoginSuccessHandler;
+import com.busanit501.weatherback.util.JWTUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+@Log4j2
+@Configuration
+// 어노테이션을 이용해서, 특정 권한 있는 페이지 접근시, 구분가능.
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+// 위 어노테이션 지원중단, 아래 어노테이션 으로 교체, 기본으로 prePostEnabled = true ,
+@EnableMethodSecurity
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class CustomSecurityConfig {
+    private final APIUserDetailsService apiUserDetailsService;
+    //추가,
+    private final JWTUtil jwtUtil;
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        log.info("시큐리티 동작 확인 ====webSecurityCustomizer======================");
+        return (web) ->
+                web.ignoring()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        log.info("===========config=================");
+
+        // AuthenticationManagerBuilder 생성 및 설정
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+
+// AuthenticationManagerBuilder에 UserDetailsService와 PasswordEncoder 설정
+        authenticationManagerBuilder
+                .userDetailsService(apiUserDetailsService) // 사용자 정보를 제공하는 서비스 설정
+                .passwordEncoder(passwordEncoder()); // 비밀번호 암호화 방식 설정
+
+// AuthenticationManager 생성
+        AuthenticationManager authenticationManager =
+                authenticationManagerBuilder.build();
+
+// AuthenticationManager를 HttpSecurity에 설정
+        http.authenticationManager(authenticationManager); // 반드시 필요: Security 필터 체인에서 사용할 AuthenticationManager 설정
+
+// APILoginFilter 생성 및 AuthenticationManager 설정
+        APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken"); // 로그인 엔드포인트 설정
+        apiLoginFilter.setAuthenticationManager(authenticationManager); // APILoginFilter에서 사용할 AuthenticationManager 설정
+
+  // APILoginSuccessHandler 생성: 인증 성공 후 처리 로직을 담당
+        // 교체
+        APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
+
+// SuccessHandler 설정: 로그인 성공 시 APILoginSuccessHandler가 호출되도록 설정
+        apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
+
+// APILoginFilter를 UsernamePasswordAuthenticationFilter 이전에 추가
+        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // 사용자 인증 전에 APILoginFilter 동작 설정
+
+        // /api 경로에 대해 TokenCheckFilter 적용
+        http.addFilterBefore(
+                tokenCheckFilter(jwtUtil, apiUserDetailsService),
+                UsernamePasswordAuthenticationFilter.class
+        );
+
+        // RefreshTokenFilter를 TokenCheckFilter 이전에 등록
+        http.addFilterBefore(
+                new RefreshTokenFilter("/refreshToken", jwtUtil),
+                TokenCheckFilter.class
+        );
+
+// CSRF 비활성화
+        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable()); // REST API 환경에서 CSRF 보호 비활성화
+
+// 세션 관리 정책 설정
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션 사용 안 함: JWT 기반 인증 사용
+
+        http.cors(httpSecurityCorsConfigurer ->
+                httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource())
+        );
+
+// SecurityFilterChain 반환
+        return http.build(); // Security 필터 체인을 빌드하여 반환
+    }
+
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, APIUserDetailsService apiUserDetailsService){
+        return new TokenCheckFilter(apiUserDetailsService, jwtUtil);
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+}
