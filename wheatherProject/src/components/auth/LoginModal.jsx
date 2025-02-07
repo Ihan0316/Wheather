@@ -26,7 +26,7 @@ const LoginModal = ({ onClose }) => {
             console.log("AccessToken string:", data.accessToken);
 
             if (!data.accessToken || data.accessToken.split('.').length !== 3) {
-                throw new Error("토큰 형식이 올바르지 않습니다.");
+                throw new Error("토큰 형식이 올바르지 않습니다!");
             }
 
             const { jwtDecode } = await import('jwt-decode');

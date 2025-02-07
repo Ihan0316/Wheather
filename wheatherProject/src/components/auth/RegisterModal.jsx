@@ -72,7 +72,7 @@ const RegisterModal = ({ onClose }) => {
             return;
         }
 
-        if (mpw.length < 8) {
+        if (mpw.length < 4) {
             setError("비밀번호는 8자 이상이어야 합니다.");
             return;
         }
@@ -141,7 +141,7 @@ const RegisterModal = ({ onClose }) => {
                             name="mpw"
                             value={formData.mpw}
                             onChange={handleChange}
-                            placeholder="비밀번호 (8자 이상)"
+                            placeholder="비밀번호 (4자 이상)"
                             className="rounded border p-2 text-sm text-black"
                         />
                         <input
