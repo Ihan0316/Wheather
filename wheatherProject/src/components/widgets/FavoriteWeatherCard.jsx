@@ -1,32 +1,30 @@
-import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
-import WeatherIcon from "../common/WeatherIcon";
-import { TiLocationArrow } from "react-icons/ti";
-import axios from "axios";
+import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
+import WeatherIcon from '../common/WeatherIcon';
+import { TiLocationArrow } from 'react-icons/ti';
+import axios from 'axios';
 
-
-
-function FavoriteWeatherCard({ lat, lng }) {
+function FavoriteWeatherCard({ lat, lng, isFavorite, id, setWeather }) {
   const { data, isSuccess } = useGetCurrentWeatherQuery({
-    lat: lat,    // props로 전달된 lat, lng 사용
+    lat: lat, // props로 전달된 lat, lng 사용
     lng: lng,
   });
 
   function convertToDate(timezone, dt) {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
-    let local_time_Day = local_time.toLocaleString("ko-KR", {
-      timeZone: "UTC",
-      weekday: "long",
+    let local_time_Day = local_time.toLocaleString('ko-KR', {
+      timeZone: 'UTC',
+      weekday: 'long',
     });
     return local_time_Day;
   }
 
   function convertToHMin(dt) {
-    let time = new Date(dt * 1000).toLocaleTimeString("ko-KR", {
-      timeZone: "UTC",
+    let time = new Date(dt * 1000).toLocaleTimeString('ko-KR', {
+      timeZone: 'UTC',
       hour12: true,
-      hour: "numeric",
-      minute: "numeric",
+      hour: 'numeric',
+      minute: 'numeric',
     });
     return time;
   }
@@ -34,43 +32,85 @@ function FavoriteWeatherCard({ lat, lng }) {
   function getLocalTime(timezone, dt) {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
-    let local_time_format = local_time.toLocaleTimeString("ko-KR", {
-      timeZone: "UTC",
+    let local_time_format = local_time.toLocaleTimeString('ko-KR', {
+      timeZone: 'UTC',
       hour12: true,
-      hour: "numeric",
-      minute: "numeric",
+      hour: 'numeric',
+      minute: 'numeric',
     });
     return local_time_format;
   }
- 
-  //데이터 저장
+
   const saveFavorite = async () => {
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
+      const token = localStorage.getItem('token');
+
       const response = await axios.post(
         `${SERVER_URL}/api/weather`,
         {
+          country: data.sys.country, // 국가 정보 추가
           city: data.name,
           latitude: lat,
           longitude: lng,
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // 👈 인증 정보 포함 (CORS 문제 방지)
-        }
+          withCredentials: true,
+        },
       );
 
-      console.log("저장 완료:", response.data);
-      alert(`${data.name}이(가) 즐겨찾기에 추가되었습니다.`);
+      if (response.data === '이미 등록된 즐겨찾기 도시입니다.') {
+        alert('이미 등록된 즐겨찾기 도시입니다.');
+      } else {
+        alert(`${data.name}이(가) 즐겨찾기에 추가되었습니다.`);
+      }
     } catch (error) {
-      console.error("저장 실패:", error);
-      alert("즐겨찾기 추가 중 오류가 발생했습니다.");
+      if (error.response && error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+      } else {
+        console.error('저장 실패:', error);
+        alert('즐겨찾기 추가 중 오류가 발생했습니다.');
+      }
     }
   };
 
- 
+  // const deleteFavorite = async (id) => {
+  //   const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+  //   try {
+  //     await axios.delete(`${SERVER_URL}/api/weather/${id}`);
+  //     onDelete();  // 부모 컴포넌트에 알리기
+  //   } catch (error) {
+  //     alert("즐겨찾기 삭제 중 오류가 발생했습니다.");
+  //   }
+  // };
+
+  const deleteFavorite = async () => {
+    const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
+    try {
+      const token = localStorage.getItem('token');
+
+      await axios.delete(`${SERVER_URL}/api/weather/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      setWeather((prevWeather) => prevWeather.filter((city) => city.id !== id));
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.');
+      } else {
+        console.error('삭제 실패:', error);
+        alert('삭제 중 오류가 발생했습니다.');
+      }
+    }
+  };
 
   return (
     <>
@@ -150,13 +190,21 @@ function FavoriteWeatherCard({ lat, lng }) {
                 </div>
               </div>
             </div>
-            {/* <div className="temp">{Math.round(data.main.temp)}°</div> */}
-            <WeatherIcon iconType={data.weather[0].icon} size={50} />
-            <button onClick={saveFavorite} className="save-btn">
-              즐겨찾기 추가
-            </button>
-          </div>
 
+            <WeatherIcon iconType={data.weather[0].icon} size={50} />
+
+            <div className="flex justify-end">
+              {isFavorite ? (
+                <button onClick={deleteFavorite} className="text-red-500">
+                  즐겨찾기 삭제
+                </button>
+              ) : (
+                <button onClick={saveFavorite} className="text-green-500">
+                  즐겨찾기 추가
+                </button>
+              )}
+            </div>
+          </div>
         ))}
     </>
   );
