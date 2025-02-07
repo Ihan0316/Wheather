@@ -11,6 +11,8 @@ import FortuneRecommendation from '../header/FortuneRecommendation';
 import { SearchCountryModal } from './SearchCountryModal';
 import LoginModal from '../auth/LoginModal';
 import RegisterModal from '../auth/RegisterModal';
+import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
+import { saveLocation } from '../../features/search/searchSlice';
 
 function Header() {
   const dispatch = useDispatch();
@@ -28,12 +30,17 @@ function Header() {
         (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
+
           fetch(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY_OPENWEATHERMAP}`
+            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
+              import.meta.env.VITE_API_KEY_OPENWEATHERMAP
+            }`,
           )
             .then((response) => response.json())
             .then((data) => {
-              // 필요 시 저장(예: dispatch 활용)
+              const cityAndCountry = `${data.name},${data.sys.country}`;
+              dispatch(saveLocation(cityAndCountry));
+              dispatch(saveGeoCode({ lat, lng: lon }));
             })
             .catch((error) => {
               console.error('Error fetching weather data:', error);
@@ -41,7 +48,7 @@ function Header() {
         },
         (error) => {
           console.error('Error getting location:', error.message);
-        }
+        },
       );
     } else {
       console.error('Geolocation is not supported by this browser.');
@@ -74,8 +81,10 @@ function Header() {
             </button>
           ) : (
             <button
-              onClick={() => alert('해당 기능은 로그인 후 이용하실 수 있습니다.')}
-              className="ml-2 rounded bg-gray-500 px-4 py-2 font-semibold text-white opacity-50 cursor-not-allowed"
+              onClick={() =>
+                alert('해당 기능은 로그인 후 이용하실 수 있습니다.')
+              }
+              className="ml-2 cursor-not-allowed rounded bg-gray-500 px-4 py-2 font-semibold text-white opacity-50"
             >
               도시 선택
             </button>
@@ -99,8 +108,10 @@ function Header() {
             </button>
           ) : (
             <button
-              onClick={() => alert('해당 기능은 로그인 후 이용하실 수 있습니다.')}
-              className="ml-2 rounded bg-blue-500 px-4 py-2 font-semibold text-white opacity-50 cursor-not-allowed"
+              onClick={() =>
+                alert('해당 기능은 로그인 후 이용하실 수 있습니다.')
+              }
+              className="ml-2 cursor-not-allowed rounded bg-blue-500 px-4 py-2 font-semibold text-white opacity-50"
             >
               오늘의 운세
             </button>
@@ -192,7 +203,9 @@ function Header() {
         <SearchCountryModal onClose={() => setShowSearchCountryModal(false)} />
       )}
 
-      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
+      {showLoginModal && (
+        <LoginModal onClose={() => setShowLoginModal(false)} />
+      )}
       {showRegisterModal && (
         <RegisterModal onClose={() => setShowRegisterModal(false)} />
       )}
