@@ -42,6 +42,12 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             return;
         }
 
+        // "/api/weather/"로 시작하지 않는 경로는 필터 처리하지 않음
+        if (!path.startsWith("/api/weather/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 로그 출력
         log.info("Token Check Filter triggered...");
         log.info("JWTUtil instance: {}", jwtUtil);
