@@ -1,10 +1,9 @@
 package com.busanit501.weatherback.controller;
 
-
-
 import com.busanit501.weatherback.domain.Weather;
 import com.busanit501.weatherback.dto.WeatherDTO;
 import com.busanit501.weatherback.service.WeatherService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,27 +16,29 @@ public class WeatherController {
 
     private final WeatherService service;
 
+
+    @Autowired
     public WeatherController(WeatherService service) {
         this.service = service;
     }
 
     @PostMapping
-    public Weather addFavorite(@RequestBody WeatherDTO dto) {
-        return service.addFavorite(dto);
+    public ResponseEntity<String> addFavorite(@RequestBody WeatherDTO dto) {
+        Weather weather = dto.toEntity();
+        String result = service.saveFavoriteWeather(weather);
+
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
-    public List<Weather> getFavorites() {
-        return service.getFavorites();
+    public ResponseEntity<List<Weather>> getFavorites() {
+        List<Weather> favorites = service.getAllFavorites();
+        return ResponseEntity.ok(favorites);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFavorite(@PathVariable Long id) {
+    public ResponseEntity<String> deleteFavorite(@PathVariable Long id) {
         service.deleteFavorite(id);
-    }
-
-    @GetMapping("/{city}")
-    public ResponseEntity<String> getWeather(@PathVariable String city) {
-        return ResponseEntity.ok("Weather data for " + city);
+        return ResponseEntity.ok("삭제 완료");
     }
 }

@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface WeatherRepository extends JpaRepository<Weather, Long> {
     List<Weather> findByCity(String city);
+    List<Weather> findByLatitudeAndLongitude(double latitude, double longitude); // 메서드명 수정
+    void deleteById(Long id);
 }
