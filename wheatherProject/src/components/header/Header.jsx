@@ -122,7 +122,7 @@ function Header() {
           {auth.user ? (
             <>
               <span className="text-sm text-gray-700 dark:text-gray-300">
-                안녕하세요, {auth.user.mid}
+                안녕하세요, {auth.user.mid}님!
               </span>
               <button
                 onClick={() => dispatch(clearCredentials())}

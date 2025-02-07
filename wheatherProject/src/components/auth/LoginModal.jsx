@@ -1,4 +1,3 @@
-// src/components/auth/LoginModal.jsx
 import React, { useState } from 'react';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
@@ -14,26 +13,26 @@ const LoginModal = ({ onClose }) => {
         setCredentialsState({ ...credentials, [e.target.name]: e.target.value });
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSubmit();
+        }
+    };
+
     const handleSubmit = async () => {
         try {
-            // 로그인 API 호출
             const data = await loginAPI(credentials);
             console.log("Received token data:", data);
             console.log("AccessToken string:", data.accessToken);
 
-            // 토큰 형식 검사
             if (!data.accessToken || data.accessToken.split('.').length !== 3) {
-                throw new Error("토큰 형식이 올바르지 않습니다.");
+                throw new Error("토큰 형식이 올바르지 않습니다!");
             }
 
-            // jwt-decode 모듈 동적 가져오기 (named import 사용)
             const { jwtDecode } = await import('jwt-decode');
-
-            // jwtDecode 함수를 사용하여 토큰 디코딩
             const decoded = jwtDecode(data.accessToken);
             console.log('Decoded token:', decoded);
 
-            // Redux 액션을 사용해 auth.user에 저장
             dispatch(
                 setCredentials({
                     user: {
@@ -73,6 +72,7 @@ const LoginModal = ({ onClose }) => {
                             name="mid"
                             value={credentials.mid}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             placeholder="아이디"
                             className="rounded border p-2 text-sm text-black"
                         />
@@ -81,6 +81,7 @@ const LoginModal = ({ onClose }) => {
                             name="mpw"
                             value={credentials.mpw}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             placeholder="비밀번호"
                             className="rounded border p-2 text-sm text-black"
                         />
