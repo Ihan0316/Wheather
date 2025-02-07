@@ -12,10 +12,13 @@ const generateLottoNumbers = () => {
         bonus = Math.floor(Math.random() * 45) + 1;
     } while (numbers.has(bonus));
 
-    return [...numbers, bonus]; // 6개 숫자 + 보너스 번호 1개
+    // 번호를 배열로 변환하고 정렬
+    const sortedNumbers = [...numbers].sort((a, b) => a - b);
+
+    return [...sortedNumbers, bonus]; // 6개 숫자 + 보너스 번호 1개
 };
 
-export default function LottoGenerator({ isDarkMode }) { // isDarkMode prop 추가
+export default function LottoGenerator({ isDarkMode }) {
     const [lottoNumbers] = useState(generateLottoNumbers()); // 최초 한 번만 번호 생성
 
     return (
