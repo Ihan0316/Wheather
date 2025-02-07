@@ -20,7 +20,7 @@ public class WeatherService {
 
     // 즐겨찾기 추가: 중복 체크 후 저장
     public String saveFavoriteWeather(Weather weather) {
-        List<Weather> existingWeather = repository.findByCity(weather.getCity());
+        List<Weather> existingWeather = repository.findByMid(weather.getMid());
 
         if (!existingWeather.isEmpty()) {
             return "이미 등록된 즐겨찾기 도시입니다.";

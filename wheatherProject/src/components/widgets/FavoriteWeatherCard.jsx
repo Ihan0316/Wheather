@@ -45,15 +45,19 @@ function FavoriteWeatherCard({ lat, lng, isFavorite, id, setWeather }) {
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
       const token = localStorage.getItem('token');
+      const userMid = localStorage.getItem('userMid'); // 로그인한 사용자의 mid 가져오기
+
+      const weatherData = {
+        country: data.sys.country,
+        city: data.name,
+        latitude: lat,
+        longitude: lng,
+        mid: userMid, // 사용자의 mid 전달
+      };
 
       const response = await axios.post(
         `${SERVER_URL}/api/weather`,
-        {
-          country: data.sys.country, // 국가 정보 추가
-          city: data.name,
-          latitude: lat,
-          longitude: lng,
-        },
+        weatherData,
         {
           headers: {
             'Content-Type': 'application/json',

@@ -125,8 +125,12 @@ function Header() {
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 안녕하세요, {auth.user.mid}님!
               </span>
+              {localStorage.setItem('userMid', auth.user.mid)}
               <button
-                onClick={() => dispatch(clearCredentials())}
+                onClick={() => {
+                  dispatch(clearCredentials());
+                  localStorage.removeItem('userMid');
+                }}
                 className="rounded bg-red-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-red-600"
               >
                 로그아웃

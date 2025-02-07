@@ -1,6 +1,5 @@
 package com.busanit501.weatherback.domain;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,7 @@ public class Weather {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String mid;
     private String country;
     private String city;
     private Double latitude;
@@ -27,7 +26,8 @@ public class Weather {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Weather(String country, String city, Double latitude, Double longitude) {
+    public Weather(String mid, String country, String city, Double latitude, Double longitude) {
+        this.mid = mid;
         this.country = country;
         this.city = city;
         this.latitude = latitude;
