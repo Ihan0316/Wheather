@@ -15,12 +15,12 @@ const generateLottoNumbers = () => {
     return [...numbers, bonus]; // 6개 숫자 + 보너스 번호 1개
 };
 
-export default function LottoGenerator() {
+export default function LottoGenerator({ isDarkMode }) { // isDarkMode prop 추가
     const [lottoNumbers] = useState(generateLottoNumbers()); // 최초 한 번만 번호 생성
 
     return (
-        <div className="flex flex-col items-center gap-4 p-4 bg-white shadow-lg rounded-xl">
-            <h2 className="text-xl font-bold">🎰로또 추천 번호</h2>
+        <div className={`flex flex-col items-center gap-4 p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg rounded-xl`}>
+            <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>🎰로또 추천 번호</h2>
             <div className="flex gap-2">
                 {lottoNumbers.slice(0, 6).map((num, index) => (
                     <div key={index} className="w-12 h-12 flex items-center justify-center bg-blue-500 text-white text-lg font-bold rounded-full">
