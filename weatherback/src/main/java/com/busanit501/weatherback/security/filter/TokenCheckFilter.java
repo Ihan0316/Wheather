@@ -27,36 +27,18 @@ public class TokenCheckFilter extends OncePerRequestFilter {
     private final APIUserDetailsService apiUserDetailsService;
     private final JWTUtil jwtUtil;
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        // 요청 경로 가져오기
         String path = request.getRequestURI();
 
-        // "/api/"로 시작하지 않는 경로는 필터 처리하지 않음
-        if (!path.startsWith("/api/**")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        // 로그 출력
-        log.info("Token Check Filter triggered...");
+        log.info("Token Check Filter triggered for path: {}", path);
         log.info("JWTUtil instance: {}", jwtUtil);
 
-
         try {
-//            // JWT 유효성 검증
-//            validateAccessToken(request);
-//
-//            // 검증 성공 시 다음 필터로 전달
-//            filterChain.doFilter(request, response);
             Map<String, Object> payload = validateAccessToken(request);
-            // mid 추출
             String mid = (String) payload.get("mid");
-            log.info("mid: " + mid);
+            log.info("Extracted mid from token: {}", mid);
 
             UserDetails userDetails = apiUserDetailsService.loadUserByUsername(mid);
             UsernamePasswordAuthenticationToken authentication =
@@ -65,26 +47,22 @@ public class TokenCheckFilter extends OncePerRequestFilter {
                             null,
                             userDetails.getAuthorities()
                     );
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            // 인증 후 다음 필터로 요청 전달
+
             filterChain.doFilter(request, response);
-        } catch (AccessTokenException accessTokenException) {
-            // 검증 실패 시 에러 응답 반환
-            accessTokenException.sendResponseError(response);
+        } catch (AccessTokenException e) {
+            log.error("AccessTokenException occurred: {}", e.getMessage());
+            e.sendResponseError(response);
         }
     }
-
 
     public Map<String, Object> validateAccessToken(HttpServletRequest request) throws AccessTokenException {
         String headerStr = request.getHeader("Authorization");
 
-        // 1. Authorization 헤더가 없는 경우
         if (headerStr == null || headerStr.length() < 8) {
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.UNACCEPT);
         }
 
-        // 2. 토큰 타입 확인
         String tokenType = headerStr.substring(0, 6);
         String tokenStr = headerStr.substring(7);
 
@@ -93,22 +71,16 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         }
 
         try {
-            // 3. JWT 검증
-            Map<String, Object> values = jwtUtil.validateToken(tokenStr);
-            return values;
-
-        } catch (MalformedJwtException malformedJwtException) {
-            log.error("MalformedJwtException: Invalid token format.");
+            return jwtUtil.validateToken(tokenStr);
+        } catch (MalformedJwtException e) {
+            log.error("MalformedJwtException: {}", e.getMessage());
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.MALFORM);
-
-        } catch (SignatureException signatureException) {
-            log.error("SignatureException: Invalid token signature.");
+        } catch (SignatureException e) {
+            log.error("SignatureException: {}", e.getMessage());
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.BADSIGN);
-
-        } catch (ExpiredJwtException expiredJwtException) {
-            log.error("ExpiredJwtException: Token has expired.");
+        } catch (ExpiredJwtException e) {
+            log.error("ExpiredJwtException: {}", e.getMessage());
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.EXPIRED);
         }
     }
 }
-

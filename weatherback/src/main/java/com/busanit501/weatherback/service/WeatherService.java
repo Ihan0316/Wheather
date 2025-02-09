@@ -18,8 +18,7 @@ public class WeatherService {
     }
 
     /**
-     * 즐겨찾기 추가 메서드
-     * 동일한 사용자(mid)가 동일 도시(city)를 이미 즐겨찾기에 등록한 경우에는 추가하지 않음.
+     * 즐겨찾기 추가
      */
     public String saveFavoriteWeather(Weather weather) {
         List<Weather> existingWeather = repository.findByMidAndCity(weather.getMid(), weather.getCity());
@@ -31,14 +30,21 @@ public class WeatherService {
     }
 
     /**
-     * 전체 즐겨찾기 조회 메서드
+     * 특정 사용자(mid) 기준 즐겨찾기 조회
+     */
+    public List<Weather> getFavoritesByMid(String mid) {
+        return repository.findByMid(mid);
+    }
+
+    /**
+     * 전체 즐겨찾기 조회 (필요 시 사용)
      */
     public List<Weather> getAllFavorites() {
         return repository.findAll();
     }
 
     /**
-     * 즐겨찾기 삭제 메서드
+     * 즐겨찾기 삭제
      */
     public void deleteFavorite(Long id) {
         logger.info("삭제 요청 ID: {}", id);
