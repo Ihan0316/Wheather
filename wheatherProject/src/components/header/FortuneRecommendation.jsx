@@ -1,4 +1,3 @@
-// src/components/header/FortuneRecommendation.jsx
 import React, { useState, useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetCurrentWeatherQuery } from '../../services/WeatherApi.js';
@@ -8,51 +7,61 @@ import { FortuneModal } from './FortuneModal';
  * 1. 띠(12간지) 기본 정보
  * ──────────────────────────────── */
 const zodiacTraits = {
-  '쥐': {
+  쥐: {
     personality: '영리하고 빠른 판단력, 사교적, 기회 포착 능력',
-    fortune: '금전 감각은 탁월하지만 변동이 심할 수 있어. 인간관계는 넓지만 스트레스 관리에 신경 써야 해',
+    fortune:
+      '금전 감각은 탁월하지만 변동이 심할 수 있어. 인간관계는 넓지만 스트레스 관리에 신경 써야 해',
   },
-  '소': {
+  소: {
     personality: '성실하고 인내심 강하며 고집이 있고 신뢰받는 성격',
-    fortune: '안정적인 재물운이지만 성장속도는 느릴 수 있어. 건강에는 피로를 조심해',
+    fortune:
+      '안정적인 재물운이지만 성장속도는 느릴 수 있어. 건강에는 피로를 조심해',
   },
-  '호랑이': {
-    personality: '용감하고 리더십이 강하며 도전적이지만 감정 기복이 있을 수 있어',
-    fortune: '도전적인 기질로 재물운에 변동이 있어. 직업적으로 성공할 가능성이 크지만 대인관계 충돌은 주의해',
+  호랑이: {
+    personality:
+      '용감하고 리더십이 강하며 도전적이지만 감정 기복이 있을 수 있어',
+    fortune:
+      '도전적인 기질로 재물운에 변동이 있어. 직업적으로 성공할 가능성이 크지만 대인관계 충돌은 주의해',
   },
-  '토끼': {
+  토끼: {
     personality: '온화하고 배려심 깊으며 예술적 감각이 있고 조용하지만 똑똑해',
-    fortune: '재물운은 안정적일 수 있으나 소극적일 수 있어. 인간관계는 원만하지만 지나친 배려는 손해를 볼 수 있어',
+    fortune:
+      '재물운은 안정적일 수 있으나 소극적일 수 있어. 인간관계는 원만하지만 지나친 배려는 손해를 볼 수 있어',
   },
-  '용': {
+  용: {
     personality: '카리스마 넘치고 야망이 크며 자신감이 넘쳐',
-    fortune: '재물운이 크지만 기복이 심할 수 있어. 리더십은 좋지만 독선적 태도는 주의해야 해',
+    fortune:
+      '재물운이 크지만 기복이 심할 수 있어. 리더십은 좋지만 독선적 태도는 주의해야 해',
   },
-  '뱀': {
+  뱀: {
     personality: '직관력이 뛰어나고 신비로운 분위기와 분석적 사고를 지님',
-    fortune: '투자 감각은 훌륭하지만 대인관계에서 오해를 받을 수 있어. 건강은 신경계 질환에 주의해',
+    fortune:
+      '투자 감각은 훌륭하지만 대인관계에서 오해를 받을 수 있어. 건강은 신경계 질환에 주의해',
   },
-  '말': {
+  말: {
     personality: '자유롭고 활동적이며 독립적인 면도 있으며 충동적일 수 있어',
-    fortune: '재물운은 좋은 편이지만 관리가 필요해. 건강은 양호하지만 과로는 조심해야 해',
+    fortune:
+      '재물운은 좋은 편이지만 관리가 필요해. 건강은 양호하지만 과로는 조심해야 해',
   },
-  '양': {
+  양: {
     personality: '온화하고 감성적이며 예술적 기질이 있고 조용해',
-    fortune: '재물운은 안정적이지만 기회가 적을 수도 있어. 인간관계는 원만하지만 감정 기복에 주의해',
+    fortune:
+      '재물운은 안정적이지만 기회가 적을 수도 있어. 인간관계는 원만하지만 감정 기복에 주의해',
   },
-  '원숭이': {
+  원숭이: {
     personality: '영리하고 유머러스하며 창의적이고 재치 있어',
     fortune: '재물운은 좋지만 변동성이 크니 대인관계의 신뢰 쌓기가 중요해',
   },
-  '닭': {
+  닭: {
     personality: '꼼꼼하고 계획적이며 완벽주의적인 면이 있어',
     fortune: '철저한 계획 덕분에 재물운은 좋지만 너무 예민할 수 있어',
   },
-  '개': {
+  개: {
     personality: '충실하고 정의로우며 신뢰할 수 있어',
-    fortune: '재물운은 중간 정도지만 인간관계에서 신뢰를 쌓으면 성공 가능성이 커져',
+    fortune:
+      '재물운은 중간 정도지만 인간관계에서 신뢰를 쌓으면 성공 가능성이 커져',
   },
-  '돼지': {
+  돼지: {
     personality: '솔직하고 관대하며 낙천적이야',
     fortune: '돈은 잘 벌지만 쉽게 소비할 수 있어. 건강은 좋지만 방심하면 안 돼',
   },
@@ -108,11 +117,13 @@ const mbtiInfo = {
   },
   ENTP: {
     trait: '창의적이고 말재주 있으며 즉흥적이야',
-    fortune: '독창적인 아이디어로 직업적 성공의 가능성이 높지만 연애에선 신중해야 해',
+    fortune:
+      '독창적인 아이디어로 직업적 성공의 가능성이 높지만 연애에선 신중해야 해',
   },
   ESTJ: {
     trait: '체계적이고 조직적이며 책임감 넘쳐',
-    fortune: '명확한 계획과 규율 덕에 안정적인 성공과 성장을 기대할 수 있을 거야',
+    fortune:
+      '명확한 계획과 규율 덕에 안정적인 성공과 성장을 기대할 수 있을 거야',
   },
   ESFJ: {
     trait: '사교적이고 협력적이며 타인을 배려해',
@@ -140,7 +151,6 @@ const weatherKor = {
   mist: '안개',
   default: '기타',
 };
-
 const weatherInfluence = {
   clear: {
     text: '화창해서 기분이 좋아지는 하루야',
@@ -184,24 +194,50 @@ const weatherInfluence = {
  * ──────────────────────────────── */
 function getLoveFortune(zodiac, mbti, weather) {
   const baseLoveLuck = {
-    '쥐': 3, '소': 2, '호랑이': 5, '토끼': 4,
-    '용': 5, '뱀': 3, '말': 5, '양': 3,
-    '원숭이': 4, '닭': 3, '개': 4, '돼지': 3,
+    쥐: 3,
+    소: 2,
+    호랑이: 5,
+    토끼: 4,
+    용: 5,
+    뱀: 3,
+    말: 5,
+    양: 3,
+    원숭이: 4,
+    닭: 3,
+    개: 4,
+    돼지: 3,
   };
   const mbtiInfluence = {
-    ENFP: 2, ENTP: 2, ENTJ: 1, ENFJ: 1,
-    INFJ: -1, INTJ: -1, INFP: -1, INTP: -1,
-    ESFP: 2, ESTP: 2, ESFJ: 1, ESTJ: 1,
-    ISTJ: -1, ISFJ: -1, ISTP: -2, ISFP: -1,
+    ENFP: 2,
+    ENTP: 2,
+    ENTJ: 1,
+    ENFJ: 1,
+    INFJ: -1,
+    INTJ: -1,
+    INFP: -1,
+    INTP: -1,
+    ESFP: 2,
+    ESTP: 2,
+    ESFJ: 1,
+    ESTJ: 1,
+    ISTJ: -1,
+    ISFJ: -1,
+    ISTP: -2,
+    ISFP: -1,
   };
   const weatherEffect = {
-    clear: 2, clouds: 0, rain: -1, snow: 1,
-    thunderstorm: -2, mist: -1,
+    clear: 2,
+    clouds: 0,
+    rain: -1,
+    snow: 1,
+    thunderstorm: -2,
+    mist: -1,
   };
 
-  let loveScore = (baseLoveLuck[zodiac] || 3)
-    + (mbtiInfluence[mbti] || 0)
-    + (weatherEffect[weather] || 0);
+  let loveScore =
+    (baseLoveLuck[zodiac] || 3) +
+    (mbtiInfluence[mbti] || 0) +
+    (weatherEffect[weather] || 0);
   if (Math.random() > 0.8) loveScore += 1;
   loveScore = Math.max(0, Math.min(5, loveScore));
 
@@ -213,30 +249,54 @@ function getLoveFortune(zodiac, mbti, weather) {
     '관계 발전 기회 (연애 중이면 한 단계 도약할 수 있어)',
     '최고의 연애운 (훌륭한 연애 기회와 좋은 인연 기대해봐)',
   ];
-
   return loveFortune[loveScore];
 }
 
 function getMoneyFortune(zodiac, mbti, weather) {
   const baseMoneyLuck = {
-    '쥐': 5, '소': 4, '호랑이': 3, '토끼': 3,
-    '용': 5, '뱀': 4, '말': 3, '양': 2,
-    '원숭이': 4, '닭': 5, '개': 3, '돼지': 2,
+    쥐: 5,
+    소: 4,
+    호랑이: 3,
+    토끼: 3,
+    용: 5,
+    뱀: 4,
+    말: 3,
+    양: 2,
+    원숭이: 4,
+    닭: 5,
+    개: 3,
+    돼지: 2,
   };
   const mbtiInfluence = {
-    ENTJ: 2, ESTJ: 2, ENTP: 1, ENFP: 1,
-    INTJ: 1, INTP: 1, INFJ: 0, INFP: -1,
-    ESFP: -1, ESTP: -1, ESFJ: 0, ISFJ: 1,
-    ISTJ: 1, ISTP: -1, ISFP: -2,
+    ENTJ: 2,
+    ESTJ: 2,
+    ENTP: 1,
+    ENFP: 1,
+    INTJ: 1,
+    INTP: 1,
+    INFJ: 0,
+    INFP: -1,
+    ESFP: -1,
+    ESTP: -1,
+    ESFJ: 0,
+    ISFJ: 1,
+    ISTJ: 1,
+    ISTP: -1,
+    ISFP: -2,
   };
   const weatherEffect = {
-    clear: 2, clouds: 0, rain: -1, snow: 1,
-    thunderstorm: -2, mist: -1,
+    clear: 2,
+    clouds: 0,
+    rain: -1,
+    snow: 1,
+    thunderstorm: -2,
+    mist: -1,
   };
 
-  let moneyScore = (baseMoneyLuck[zodiac] || 3)
-    + (mbtiInfluence[mbti] || 0)
-    + (weatherEffect[weather] || 0);
+  let moneyScore =
+    (baseMoneyLuck[zodiac] || 3) +
+    (mbtiInfluence[mbti] || 0) +
+    (weatherEffect[weather] || 0);
   if (Math.random() > 0.8) moneyScore += 1;
   moneyScore = Math.max(0, Math.min(5, moneyScore));
 
@@ -248,7 +308,6 @@ function getMoneyFortune(zodiac, mbti, weather) {
     '안정적인 재물운 (큰 변화 없이 재정 흐름 유지돼)',
     '최고의 재물운 (예상치 못한 수익 상승과 금전 기회가 많아)',
   ];
-
   return moneyFortune[moneyScore];
 }
 
@@ -258,7 +317,10 @@ function getMoneyFortune(zodiac, mbti, weather) {
 export default function FortuneRecommendation({ onClose }) {
   // (A) 위치와 날씨 API 불러오기
   const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
-  const { data: weatherData, isSuccess } = useGetCurrentWeatherQuery({ lat, lng });
+  const { data: weatherData, isSuccess } = useGetCurrentWeatherQuery({
+    lat,
+    lng,
+  });
 
   // (B) 로그인 사용자 정보
   const currentUser = useSelector((state) => state.auth.user);
@@ -271,9 +333,18 @@ export default function FortuneRecommendation({ onClose }) {
   // (D) 띠 계산 함수
   const getZodiacAnimal = (year) => {
     const zodiacAnimals = [
-      '원숭이', '닭', '개', '돼지', '쥐',
-      '소', '호랑이', '토끼', '용', '뱀',
-      '말', '양',
+      '원숭이',
+      '닭',
+      '개',
+      '돼지',
+      '쥐',
+      '소',
+      '호랑이',
+      '토끼',
+      '용',
+      '뱀',
+      '말',
+      '양',
     ];
     const baseYear = 2016; // 원숭이띠 기준
     const index = (year - baseYear) % 12;
@@ -307,12 +378,16 @@ export default function FortuneRecommendation({ onClose }) {
       const zodiac = getZodiacAnimal(birthYear);
       const mbtiKey = (currentUser.mbti || '').toUpperCase();
 
-      const zodiacData = zodiacTraits[zodiac] || { personality: '', fortune: '' };
+      const zodiacData = zodiacTraits[zodiac] || {
+        personality: '',
+        fortune: '',
+      };
       const mbtiData = mbtiInfo[mbtiKey] || { trait: '', fortune: '' };
 
       const weatherMainEn = weatherData.weather[0].main.toLowerCase();
       const weatherMainKor = weatherKor[weatherMainEn] || weatherKor.default;
-      const weatherObj = weatherInfluence[weatherMainEn] || weatherInfluence.default;
+      const weatherObj =
+        weatherInfluence[weatherMainEn] || weatherInfluence.default;
       const temp = Math.round(weatherData.main.temp);
 
       const currentHour = new Date().getHours();
@@ -320,30 +395,27 @@ export default function FortuneRecommendation({ onClose }) {
         currentHour >= 5 && currentHour < 12
           ? '아침'
           : currentHour >= 12 && currentHour < 18
-            ? '오후'
-            : currentHour >= 18 && currentHour < 22
-              ? '저녁'
-              : '밤';
+          ? '오후'
+          : currentHour >= 18 && currentHour < 22
+          ? '저녁'
+          : '밤';
 
       const loveResult = getLoveFortune(zodiac, mbtiKey, weatherMainEn);
       const moneyResult = getMoneyFortune(zodiac, mbtiKey, weatherMainEn);
 
       const fortuneText = `
 [${new Date().toLocaleDateString()} ${timeOfDay}] 오늘의 운세
-
 오늘은 ${zodiac}띠의 ${zodiacData.personality} 면모가 돋보일 것 같아.
-MBTI: ${currentUser.mbti} (${mbtiData.trait}) 성향이 더해져 네만의 독특한 에너지가 흘러나올 거야.
-
+MBTI: ${currentUser.mbti} (${
+        mbtiData.trait
+      }) 성향이 더해져 네만의 독특한 에너지가 흘러나올 거야.
 현재 날씨는 ${weatherMainKor} (약 ${temp}℃)인데,
 ${weatherObj.text} 덕분에 ${weatherObj.energy} 기운이 함께 하고 있어.
 ${weatherObj.advice}
-
 💖 연애운: ${loveResult}
 💰 재물운: ${moneyResult}
-
 또, ${mbtiData.fortune}. ${zodiacData.fortune} 흐름을 기억하면
 오늘 하루를 좀 더 슬기롭게 보낼 수 있을 거야.
-
 멋진 하루 보내길 바랄게!
       `.trim();
 
@@ -375,7 +447,7 @@ ${weatherObj.advice}
       )}
       {error && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded text-black">
+          <div className="rounded bg-white p-6 text-black">
             <p className="mb-4">{error}</p>
             <button
               onClick={onClose}

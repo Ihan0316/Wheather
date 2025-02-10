@@ -13,7 +13,6 @@ import LoginModal from '../auth/LoginModal';
 import RegisterModal from '../auth/RegisterModal';
 import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
 import { saveLocation } from '../../features/search/searchSlice';
-
 function Header() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
@@ -23,7 +22,6 @@ function Header() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const location = window.location.pathname;
-
   // 일반 기능 – 현재 위치 가져오기
   const handleCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -31,7 +29,6 @@ function Header() {
         (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-
           fetch(
             `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
               import.meta.env.VITE_API_KEY_OPENWEATHERMAP
@@ -55,7 +52,6 @@ function Header() {
       console.error('Geolocation is not supported by this browser.');
     }
   };
-
   // 버튼 클릭 시 로그인 되어 있지 않으면 경고 띄우고, 로그인 되었다면 해당 모달/페이지로 이동
   const requireAuth = (callback) => {
     if (!auth.user) {
@@ -64,14 +60,12 @@ function Header() {
       callback();
     }
   };
-
   return (
     <>
       <nav className="my-4 flex items-center justify-between pr-6">
         <div className="invisible md:visible">
           <Location />
         </div>
-
         <div className="mx-auto flex items-center gap-2">
           {auth.user ? (
             <button
@@ -90,16 +84,13 @@ function Header() {
               도시 선택
             </button>
           )}
-
           <SearchBar />
-
           <button
             onClick={handleCurrentLocation}
             className="flex w-fit flex-row content-center"
           >
             <MapPinIcon className="h-6 w-6" aria-hidden="true" />
           </button>
-
           {auth.user ? (
             <button
               onClick={() => requireAuth(() => setShowFortune(true))}
@@ -118,7 +109,6 @@ function Header() {
             </button>
           )}
         </div>
-
         <div className="flex items-center gap-2">
           {auth.user ? (
             <>
@@ -157,15 +147,7 @@ function Header() {
       </nav>
 
       <div className="flex gap-2 px-6 py-4 text-lg font-semibold sm:px-0">
-        <Link
-          to="/weather-app-vite/"
-          onClick={(e) => {
-            if (!auth.user) {
-              e.preventDefault();
-              alert('해당 기능은 로그인 후 이용하실 수 있습니다.');
-            }
-          }}
-        >
+        <Link to="/weather-app-vite/">
           <button
             className={`rounded-lg px-4 py-2 ${
               location === '/weather-app-vite/' || location === '/'
@@ -177,15 +159,7 @@ function Header() {
           </button>
         </Link>
 
-        <Link
-          to="forecast"
-          onClick={(e) => {
-            if (!auth.user) {
-              e.preventDefault();
-              alert('해당 기능은 로그인 후 이용하실 수 있습니다.');
-            }
-          }}
-        >
+        <Link to="forecast">
           <button
             className={`rounded-lg px-4 py-2 ${
               location.includes('forecast')
@@ -196,7 +170,6 @@ function Header() {
             앞으로 5일
           </button>
         </Link>
-
         <Link
           to="favorite"
           onClick={(e) => {
@@ -217,15 +190,12 @@ function Header() {
           </button>
         </Link>
       </div>
-
       {showFortune && auth.user && (
         <FortuneRecommendation onClose={() => setShowFortune(false)} />
       )}
-
       {showSearchCountryModal && auth.user && (
         <SearchCountryModal onClose={() => setShowSearchCountryModal(false)} />
       )}
-
       {showLoginModal && (
         <LoginModal onClose={() => setShowLoginModal(false)} />
       )}
@@ -235,5 +205,4 @@ function Header() {
     </>
   );
 }
-
 export default Header;

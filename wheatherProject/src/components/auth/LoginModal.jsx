@@ -1,4 +1,3 @@
-// src/components/auth/LoginModal.js
 import React, { useState } from 'react';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
