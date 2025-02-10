@@ -29,8 +29,13 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
+
+        if (shouldSkipTokenValidation(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         log.info("Token Check Filter triggered for path: {}", path);
         log.info("JWTUtil instance: {}", jwtUtil);
@@ -41,12 +46,10 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             log.info("Extracted mid from token: {}", mid);
 
             UserDetails userDetails = apiUserDetailsService.loadUserByUsername(mid);
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
@@ -82,5 +85,12 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             log.error("ExpiredJwtException: {}", e.getMessage());
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.EXPIRED);
         }
+    }
+
+    private boolean shouldSkipTokenValidation(String path) {
+        return path.equals("/member/check-mid") ||
+                path.equals("/member/register") ||
+                path.equals("/api/member/login") ||
+                path.equals("/api/member/register");
     }
 }
