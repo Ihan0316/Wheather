@@ -120,6 +120,7 @@ function Header() {
                 onClick={() => {
                   dispatch(clearCredentials());
                   localStorage.removeItem('userMid');
+                  navigate('/weather-app-vite/');
                 }}
                 className="rounded bg-red-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-red-600"
               >
