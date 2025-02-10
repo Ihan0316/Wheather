@@ -51,6 +51,11 @@ Docker 실행 후,
 ** api 키는 개별 발급 부탁드립니다.
 https://openweathermap.org/appid
 
+최상단 폴더에, .env파일 생성 후, YOUR API KEY부분에 api 키 입력
+VITE_API_KEY_OPENWEATHERMAP=YOUR API KEY
+VITE_MARIADB_SET=http://localhost:8080
+
+
 ## 사용 방법
 
 이 애플리케이션을 사용하려면 검색창에 도시 이름을 입력하고 "Enter" 키를 누르면 됩니다. 해당 도시의 현재 날씨 상태가 표시됩니다.
