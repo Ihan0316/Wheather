@@ -6,11 +6,13 @@ import { loginAPI } from '../../services/AuthAPI';
 import { useNavigate } from 'react-router-dom';
 
 const LoginModal = ({ onClose }) => {
+  // 로그인 폼 데이터 및 오류 메시지 관리
   const [credentials, setCredentialsState] = useState({ mid: '', mpw: '' });
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 입력 필드 변경 시 상태 업데이트
   const handleChange = (e) => {
     setCredentialsState({
       ...credentials,
@@ -18,28 +20,31 @@ const LoginModal = ({ onClose }) => {
     });
   };
 
+  // 엔터 키 입력 시 제출 실행
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSubmit();
     }
   };
 
+  // 로그인 API 호출, 토큰 검증 및 상태 저장 후 페이지 이동
   const handleSubmit = async () => {
     try {
       const data = await loginAPI(credentials);
       console.log('Received token data:', data);
       console.log('AccessToken string:', data.accessToken);
 
-      // 토큰 형식 검증
+      // 토큰 형식 확인 (JWT는 점(.) 3개로 구분)
       if (!data.accessToken || data.accessToken.split('.').length !== 3) {
         throw new Error('토큰 형식이 올바르지 않습니다!');
       }
 
-      // jwt-decode 모듈을 동적으로 import하여 토큰 디코딩
+      // 동적 임포트로 jwt-decode 모듈 사용하여 토큰 디코딩
       const { jwtDecode } = await import('jwt-decode');
       const decoded = jwtDecode(data.accessToken);
       console.log('Decoded token:', decoded);
 
+      // 인증 데이터 구성
       const authData = {
         user: {
           mid: decoded.mid,
@@ -51,11 +56,11 @@ const LoginModal = ({ onClose }) => {
         refreshToken: data.refreshToken,
       };
 
-      // Redux store 에 저장
+      // Redux 스토어와 localStorage에 인증 데이터 저장
       dispatch(setCredentials(authData));
-      // localStorage 에 저장하여 새로고침 후에도 로그인 상태 유지
       localStorage.setItem('auth', JSON.stringify(authData));
 
+      // 모달 닫고 지정된 경로로 이동
       onClose();
       navigate('/weather-app-vite/');
     } catch (err) {
@@ -68,16 +73,14 @@ const LoginModal = ({ onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="relative max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-lg bg-white text-black">
         <div className="p-6">
+          {/* 헤더: 로그인 타이틀 및 닫기 버튼 */}
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">로그인</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-500 transition-colors hover:text-gray-700"
-              type="button"
-            >
+            <button onClick={onClose} className="text-gray-500 transition-colors hover:text-gray-700" type="button">
               <IoCloseCircleOutline size={24} />
             </button>
           </div>
+          {/* 로그인 입력폼 */}
           <div className="flex flex-col gap-2">
             <input
               type="text"
