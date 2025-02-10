@@ -24,31 +24,58 @@ function Favorite() {
   };
 
   const handleAddCity = async (cityName) => {
-    // 도시명이 cityTranslationMap에 없는 경우 에러 처리
-    if (!cityTranslationMap[cityName]) {
-      alert('도시 목록에서 선택해주세요.');
-      return;
-    }
-
-    const existingCity = cities.find((city) => city.name === cityName);
+    // 이미 추가된 도시인지 확인
+    const existingCity = cities.find(
+      (city) =>
+        city.name === cityName ||
+        city.englishName.toLowerCase() === cityName.toLowerCase(),
+    );
     if (existingCity) {
       alert('이미 추가된 도시입니다.');
       return;
     }
 
     try {
-      const cityData = await fetchCityCoordinates(cityName);
-      if (cityData.cod === 200) {
+      // cityTranslationMap에 있는 한글 도시명인 경우
+      if (cityTranslationMap[cityName]) {
+        const cityData = await fetchCityCoordinates(cityName);
+        if (cityData.cod === 200) {
+          const newCity = {
+            name: cityName,
+            englishName: cityTranslationMap[cityName],
+            lat: cityData.coord.lat,
+            lng: cityData.coord.lon,
+            country: cityData.sys.country,
+          };
+          setCities([...cities, newCity]);
+        }
+        return;
+      }
+
+      // 영문 도시명으로 직접 API 호출
+      const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric&lang=kr`,
+      );
+
+      if (response.data.cod === 200) {
+        // 영문 도시명에 해당하는 한글 도시명 찾기
+        const koreanName =
+          Object.entries(cityTranslationMap).find(
+            ([kor, eng]) => eng.toLowerCase() === cityName.toLowerCase(),
+          )?.[0] || cityName;
+
         const newCity = {
-          name: cityName, // 한글 도시명 저장
-          englishName: cityTranslationMap[cityName] || cityName, // 영문 도시명 저장
-          lat: cityData.coord.lat,
-          lng: cityData.coord.lon,
-          country: cityData.sys.country, // country 코드 추가
+          name: koreanName,
+          englishName: cityName,
+          lat: response.data.coord.lat,
+          lng: response.data.coord.lon,
+          country: response.data.sys.country,
         };
         setCities([...cities, newCity]);
       }
     } catch (error) {
+      console.error('Error adding city:', error);
       alert('도시를 찾을 수 없습니다.');
     }
   };
@@ -150,35 +177,37 @@ function Favorite() {
         <div className="relative">
           <input
             type="text"
-            placeholder="도시 이름을 입력하고 목록에서 선택하세요"
+            placeholder="도시 이름을 한글 또는 영어로 입력하세요"
             className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                if (cityTranslationMap[searchTerm]) {
-                  handleAddCity(searchTerm);
-                  e.preventDefault(); // IME 이벤트 방지
-                  e.target.value = ''; // 입력창 직접 초기화
-                  setSearchTerm(''); // 상태 초기화
-                }
+              if (e.key === 'Enter' && searchTerm.trim()) {
+                handleAddCity(searchTerm.trim());
+                e.preventDefault();
+                e.target.value = '';
+                setSearchTerm('');
               }
             }}
           />
           {searchTerm && (
             <div className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white">
-              {Object.keys(cityTranslationMap)
-                .filter((city) => city.includes(searchTerm))
-                .map((city) => (
+              {Object.entries(cityTranslationMap)
+                .filter(
+                  ([korName, engName]) =>
+                    korName.includes(searchTerm) ||
+                    engName.toLowerCase().includes(searchTerm.toLowerCase()),
+                )
+                .map(([korName, engName]) => (
                   <div
-                    key={city}
+                    key={korName}
                     className="cursor-pointer p-2 hover:bg-gray-100"
                     onClick={() => {
-                      handleAddCity(city);
+                      handleAddCity(korName);
                       setSearchTerm('');
                     }}
                   >
-                    {city}
+                    {korName} ({engName})
                   </div>
                 ))}
             </div>
