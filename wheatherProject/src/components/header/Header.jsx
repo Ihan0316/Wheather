@@ -157,15 +157,7 @@ function Header() {
       </nav>
 
       <div className="flex gap-2 px-6 py-4 text-lg font-semibold sm:px-0">
-        <Link
-          to="/weather-app-vite/"
-          onClick={(e) => {
-            if (!auth.user) {
-              e.preventDefault();
-              alert('해당 기능은 로그인 후 이용하실 수 있습니다.');
-            }
-          }}
-        >
+        <Link to="/weather-app-vite/">
           <button
             className={`rounded-lg px-4 py-2 ${
               location === '/weather-app-vite/' || location === '/'
@@ -177,15 +169,7 @@ function Header() {
           </button>
         </Link>
 
-        <Link
-          to="forecast"
-          onClick={(e) => {
-            if (!auth.user) {
-              e.preventDefault();
-              alert('해당 기능은 로그인 후 이용하실 수 있습니다.');
-            }
-          }}
-        >
+        <Link to="forecast">
           <button
             className={`rounded-lg px-4 py-2 ${
               location.includes('forecast')
