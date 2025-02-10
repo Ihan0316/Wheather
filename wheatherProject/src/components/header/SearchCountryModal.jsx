@@ -196,7 +196,7 @@ export const SearchCountryModal = ({ onClose }) => {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">🌈 날씨:</span>
-                  <span>{weatherData.weather[0].description}</span>
+                  <span>{weatherData.weather[0].description} ({weatherData.weather[0].main})</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">🌫️ 습도:</span>
