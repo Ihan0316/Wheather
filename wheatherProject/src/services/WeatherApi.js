@@ -25,6 +25,10 @@ export const weatherApi = createApi({
         // `data/2.5/forecast/hourly?lat=${lat}&lon=${lng}&cnt=10&units=metric&appid=${APIKey}`,
         `data/2.5/forecast?lat=${lat}&lon=${lng}&units=metric&appid=${APIKey}`,
     }),
+    getWeatherMap: builder.query({
+      query: ({ lat, lng }) =>
+        `maps/2.0/weather/PA0/2/${lat}/${lng}.png?appid=${APIKey}}`,
+    }),
   }),
 });
 
