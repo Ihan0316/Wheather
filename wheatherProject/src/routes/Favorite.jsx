@@ -44,6 +44,7 @@ function Favorite() {
           englishName: cityTranslationMap[cityName] || cityName, // 영문 도시명 저장
           lat: cityData.coord.lat,
           lng: cityData.coord.lon,
+          country: cityData.sys.country, // country 코드 추가
         };
         setCities([...cities, newCity]);
       }
@@ -108,7 +109,7 @@ function Favorite() {
       // 모든 도시에 대해 순차적으로 즐겨찾기 추가
       for (const city of cities) {
         const weatherData = {
-          country: 'KR', // 기본값으로 한국 설정
+          country: city.country, // API에서 받아온 country 코드 사용
           city: city.englishName,
           latitude: city.lat,
           longitude: city.lng,
