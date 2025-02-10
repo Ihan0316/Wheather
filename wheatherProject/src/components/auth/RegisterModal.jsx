@@ -4,22 +4,10 @@ import { registerAPI, checkMidAPI } from '../../services/AuthAPI';
 
 // MBTI 옵션 배열
 const MBTI_TYPES = [
-  'ISTJ',
-  'ISFJ',
-  'INFJ',
-  'INTJ',
-  'ISTP',
-  'ISFP',
-  'INFP',
-  'INTP',
-  'ESTP',
-  'ESFP',
-  'ENFP',
-  'ENTP',
-  'ESTJ',
-  'ESFJ',
-  'ENFJ',
-  'ENTJ',
+  'ISTJ', 'ISFJ', 'INFJ', 'INTJ',
+  'ISTP', 'ISFP', 'INFP', 'INTP',
+  'ESTP', 'ESFP', 'ENFP', 'ENTP',
+  'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ',
 ];
 
 const RegisterModal = ({ onClose }) => {
@@ -85,8 +73,7 @@ const RegisterModal = ({ onClose }) => {
 
   // 폼 제출 함수
   const handleSubmit = async () => {
-    const { mid, mpw, birthYear, birthMonth, birthDay, mbti, gender } =
-      formData;
+    const { mid, mpw, birthYear, birthMonth, birthDay, mbti, gender } = formData;
 
     // 필수 입력값에 대한 검증
     if (mid.length < 3 || mid.length > 12) {
@@ -110,6 +97,18 @@ const RegisterModal = ({ onClose }) => {
       return;
     }
 
+    // 날짜 유효성 검증: 입력받은 연, 월, 일로 생성한 Date 객체가
+    // 실제로 동일한 연, 월, 일을 가지는지 확인합니다.
+    const birthDateObj = new Date(birthYear, birthMonth - 1, birthDay);
+    if (
+      birthDateObj.getFullYear() !== Number(birthYear) ||
+      birthDateObj.getMonth() !== Number(birthMonth) - 1 ||
+      birthDateObj.getDate() !== Number(birthDay)
+    ) {
+      setError('유효한 생년월일을 입력해주세요.');
+      return;
+    }
+
     // 아이디 중복 검사
     try {
       const exists = await checkMidAPI(mid);
@@ -123,10 +122,7 @@ const RegisterModal = ({ onClose }) => {
     }
 
     // 생년월일 문자열 생성 (YYYY-MM-DD)
-    const birthdate = `${birthYear}-${String(birthMonth).padStart(
-      2,
-      '0',
-    )}-${String(birthDay).padStart(2, '0')}`;
+    const birthdate = `${birthYear}-${String(birthMonth).padStart(2, '0')}-${String(birthDay).padStart(2, '0')}`;
     const userData = { ...formData, birthdate };
 
     // 회원가입 API 호출
@@ -172,7 +168,7 @@ const RegisterModal = ({ onClose }) => {
               name="mpw"
               value={formData.mpw}
               onChange={handleChange}
-              placeholder="비밀번호 (4자 이상)"
+              placeholder="비밀번호 (8자 이상)"
               className="rounded border p-2 text-sm text-black"
             />
             {/* 이름 입력 */}
