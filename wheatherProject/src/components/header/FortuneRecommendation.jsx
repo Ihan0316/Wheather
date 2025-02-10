@@ -395,27 +395,27 @@ export default function FortuneRecommendation({ onClose }) {
         currentHour >= 5 && currentHour < 12
           ? '아침'
           : currentHour >= 12 && currentHour < 18
-          ? '오후'
-          : currentHour >= 18 && currentHour < 22
-          ? '저녁'
-          : '밤';
+            ? '오후'
+            : currentHour >= 18 && currentHour < 22
+              ? '저녁'
+              : '밤';
 
       const loveResult = getLoveFortune(zodiac, mbtiKey, weatherMainEn);
       const moneyResult = getMoneyFortune(zodiac, mbtiKey, weatherMainEn);
 
       const fortuneText = `
-[${new Date().toLocaleDateString()} ${timeOfDay}] 오늘의 운세
+[${new Date().toLocaleDateString()} ${timeOfDay}]
+
 오늘은 ${zodiac}띠의 ${zodiacData.personality} 면모가 돋보일 것 같아.
-MBTI: ${currentUser.mbti} (${
-        mbtiData.trait
-      }) 성향이 더해져 네만의 독특한 에너지가 흘러나올 거야.
+MBTI: ${currentUser.mbti} (${mbtiData.trait})의 성향이 더해져 너만의 독특한 에너지가 흘러나올 거야.
 현재 날씨는 ${weatherMainKor} (약 ${temp}℃)인데,
 ${weatherObj.text} 덕분에 ${weatherObj.energy} 기운이 함께 하고 있어.
 ${weatherObj.advice}
+
 💖 연애운: ${loveResult}
 💰 재물운: ${moneyResult}
-또, ${mbtiData.fortune}. ${zodiacData.fortune} 흐름을 기억하면
-오늘 하루를 좀 더 슬기롭게 보낼 수 있을 거야.
+
+ 또, ${mbtiData.fortune}. ${zodiacData.fortune} 흐름을 기억하면 오늘 하루를 좀 더 슬기롭게 보낼 수 있을 거야.
 멋진 하루 보내길 바랄게!
       `.trim();
 
