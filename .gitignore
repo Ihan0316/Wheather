@@ -1,4 +1,5 @@
-*.env
+.env
+.pritterrc
 
 #각 리액트 프로젝트 내부의 node_modules, 깃 목록에서 제외
 **/node_modules
