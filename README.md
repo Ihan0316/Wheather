@@ -49,6 +49,7 @@ Docker 실행 후,
 이렇게 하면 필요한 종속성이 설치되고 로컬 개발 서버가 시작됩니다.
 
 ** api 키는 개별 발급 부탁드립니다.
+https://openweathermap.org/appid
 
 ## 사용 방법
 
