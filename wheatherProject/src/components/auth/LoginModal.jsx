@@ -76,7 +76,11 @@ const LoginModal = ({ onClose }) => {
           {/* 헤더: 로그인 타이틀 및 닫기 버튼 */}
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">로그인</h2>
-            <button onClick={onClose} className="text-gray-500 transition-colors hover:text-gray-700" type="button">
+            <button
+              onClick={onClose}
+              className="text-gray-500 transition-colors hover:text-gray-700"
+              type="button"
+            >
               <IoCloseCircleOutline size={24} />
             </button>
           </div>
@@ -104,7 +108,7 @@ const LoginModal = ({ onClose }) => {
             <div className="mt-4 flex justify-end">
               <button
                 onClick={handleSubmit}
-                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                className="whitespace-nowrap rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
                 type="button"
               >
                 로그인

@@ -70,7 +70,7 @@ function Header() {
           {auth.user ? (
             <button
               onClick={() => requireAuth(() => setShowSearchCountryModal(true))}
-              className="ml-2 rounded bg-gray-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-600"
+              className="ml-2 rounded bg-gray-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-gray-600"
             >
               도시 선택
             </button>
@@ -94,7 +94,8 @@ function Header() {
           {auth.user ? (
             <button
               onClick={() => requireAuth(() => setShowFortune(true))}
-              className="ml-2 rounded bg-blue-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-600"
+              className="rounded px-4 py-2 font-semibold text-white transition-colors hover:brightness-90"
+              style={{ backgroundColor: 'rgb(251, 80, 82)' }}
             >
               오늘의 운세
             </button>
@@ -103,7 +104,8 @@ function Header() {
               onClick={() =>
                 alert('해당 기능은 로그인 후 이용하실 수 있습니다.')
               }
-              className="ml-2 cursor-not-allowed rounded bg-blue-500 px-4 py-2 font-semibold text-white opacity-50"
+              className="rounded px-4 py-2 font-semibold text-white transition-colors hover:brightness-90"
+              style={{ backgroundColor: 'rgb(255, 183, 185)' }}
             >
               오늘의 운세
             </button>
@@ -122,7 +124,7 @@ function Header() {
                   localStorage.removeItem('userMid');
                   navigate('/weather-app-vite/');
                 }}
-                className="rounded bg-red-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-red-600"
+                className="rounded-lg px-4 py-2 text-neutral-500 hover:bg-neutral-200 hover:dark:bg-neutral-800"
               >
                 로그아웃
               </button>
@@ -131,13 +133,13 @@ function Header() {
             <>
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="rounded bg-blue-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-600"
+                className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800"
               >
                 로그인
               </button>
               <button
                 onClick={() => setShowRegisterModal(true)}
-                className="rounded bg-green-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-600"
+                className="rounded-lg px-4 py-2 hover:bg-neutral-200 hover:dark:bg-neutral-800"
               >
                 회원가입
               </button>

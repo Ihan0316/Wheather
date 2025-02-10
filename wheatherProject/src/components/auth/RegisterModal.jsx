@@ -4,10 +4,22 @@ import { registerAPI, checkMidAPI } from '../../services/AuthAPI';
 
 // MBTI 옵션 배열
 const MBTI_TYPES = [
-  'ISTJ', 'ISFJ', 'INFJ', 'INTJ',
-  'ISTP', 'ISFP', 'INFP', 'INTP',
-  'ESTP', 'ESFP', 'ENFP', 'ENTP',
-  'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ',
+  'ISTJ',
+  'ISFJ',
+  'INFJ',
+  'INTJ',
+  'ISTP',
+  'ISFP',
+  'INFP',
+  'INTP',
+  'ESTP',
+  'ESFP',
+  'ENFP',
+  'ENTP',
+  'ESTJ',
+  'ESFJ',
+  'ENFJ',
+  'ENTJ',
 ];
 
 const RegisterModal = ({ onClose }) => {
@@ -28,7 +40,10 @@ const RegisterModal = ({ onClose }) => {
 
   // 생년월일 선택을 위한 배열 생성 (년도, 월, 일)
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i);
+  const years = Array.from(
+    { length: currentYear - 1899 },
+    (_, i) => currentYear - i,
+  );
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -70,7 +85,8 @@ const RegisterModal = ({ onClose }) => {
 
   // 폼 제출 함수
   const handleSubmit = async () => {
-    const { mid, mpw, birthYear, birthMonth, birthDay, mbti, gender } = formData;
+    const { mid, mpw, birthYear, birthMonth, birthDay, mbti, gender } =
+      formData;
 
     // 필수 입력값에 대한 검증
     if (mid.length < 3 || mid.length > 12) {
@@ -107,7 +123,10 @@ const RegisterModal = ({ onClose }) => {
     }
 
     // 생년월일 문자열 생성 (YYYY-MM-DD)
-    const birthdate = `${birthYear}-${String(birthMonth).padStart(2, '0')}-${String(birthDay).padStart(2, '0')}`;
+    const birthdate = `${birthYear}-${String(birthMonth).padStart(
+      2,
+      '0',
+    )}-${String(birthDay).padStart(2, '0')}`;
     const userData = { ...formData, birthdate };
 
     // 회원가입 API 호출
@@ -129,7 +148,11 @@ const RegisterModal = ({ onClose }) => {
         <div className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">회원가입</h2>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700" type="button">
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700"
+              type="button"
+            >
               <IoCloseCircleOutline size={24} />
             </button>
           </div>
@@ -163,7 +186,12 @@ const RegisterModal = ({ onClose }) => {
             />
             {/* 생년월일 선택 */}
             <div className="flex gap-2">
-              <select name="birthYear" value={formData.birthYear} onChange={handleChange} className="rounded border p-2 text-sm text-black">
+              <select
+                name="birthYear"
+                value={formData.birthYear}
+                onChange={handleChange}
+                className="rounded border p-2 text-sm text-black"
+              >
                 <option value="">연도</option>
                 {years.map((year) => (
                   <option key={year} value={year}>
@@ -171,7 +199,12 @@ const RegisterModal = ({ onClose }) => {
                   </option>
                 ))}
               </select>
-              <select name="birthMonth" value={formData.birthMonth} onChange={handleChange} className="rounded border p-2 text-sm text-black">
+              <select
+                name="birthMonth"
+                value={formData.birthMonth}
+                onChange={handleChange}
+                className="rounded border p-2 text-sm text-black"
+              >
                 <option value="">월</option>
                 {months.map((month) => (
                   <option key={month} value={month}>
@@ -179,7 +212,12 @@ const RegisterModal = ({ onClose }) => {
                   </option>
                 ))}
               </select>
-              <select name="birthDay" value={formData.birthDay} onChange={handleChange} className="rounded border p-2 text-sm text-black">
+              <select
+                name="birthDay"
+                value={formData.birthDay}
+                onChange={handleChange}
+                className="rounded border p-2 text-sm text-black"
+              >
                 <option value="">일</option>
                 {days.map((day) => (
                   <option key={day} value={day}>
@@ -189,7 +227,12 @@ const RegisterModal = ({ onClose }) => {
               </select>
             </div>
             {/* MBTI 선택 */}
-            <select name="mbti" value={formData.mbti} onChange={handleChange} className="rounded border p-2 text-sm text-black">
+            <select
+              name="mbti"
+              value={formData.mbti}
+              onChange={handleChange}
+              className="rounded border p-2 text-sm text-black"
+            >
               <option value="">MBTI 선택</option>
               {MBTI_TYPES.map((type) => (
                 <option key={type} value={type}>
@@ -198,7 +241,12 @@ const RegisterModal = ({ onClose }) => {
               ))}
             </select>
             {/* 성별 선택 */}
-            <select name="gender" value={formData.gender} onChange={handleChange} className="rounded border p-2 text-sm text-black">
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="rounded border p-2 text-sm text-black"
+            >
               <option value="">성별 선택</option>
               <option value="M">남성</option>
               <option value="F">여성</option>
@@ -207,8 +255,12 @@ const RegisterModal = ({ onClose }) => {
             {error && <div className="text-sm text-red-500">{error}</div>}
             {success && <div className="text-sm text-green-500">{success}</div>}
             {/* 등록 버튼 */}
-            <button onClick={handleSubmit} className="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600" type="button">
-              등록
+            <button
+              onClick={handleSubmit}
+              className="whitespace-nowrap rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+              type="button"
+            >
+              가입하기
             </button>
           </div>
         </div>

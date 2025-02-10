@@ -188,7 +188,7 @@ function Favorite() {
           <div className="flex justify-end">
             <button
               onClick={addAllToFavorites}
-              className="rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+              className="whitespace-nowrap rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
             >
               모든 도시 즐겨찾기 추가
             </button>
