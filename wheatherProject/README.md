@@ -1,66 +1,52 @@
-# Weather App ✨
+# 날씨 앱 ✨
 
-This is a simple weather application built with React and Vite. It allows users to search for a city and get the current weather conditions for that location.
+React와 Vite로 제작된 간단한 날씨 애플리케이션입니다. 사용자가 도시를 검색하여 해당 지역의 현재 날씨 상태를 확인할 수 있습니다.
 
-<img width="1702" alt="Screenshot-dark-mode" src="https://user-images.githubusercontent.com/64962012/223087582-f94a7e11-6dfa-47ec-a272-a78fc857fbe1.png">
+## 주요 기능
 
-[**View demo**](https://dariuslukasukas.github.io/weather-app-vite/) 
+- 도시 이름으로 날씨 정보 검색
+- 온도, 습도, 풍속 등 현재 날씨 정보 확인
+- 선택한 지역의 5일 예보 확인
+- Chart.js를 사용한 향후 6시간 동안의 강수 확률 차트 보기
 
-## Features
+## 사용된 라이브러리
 
-* Search for weather information by city name or ZIP code
-* View current weather information, including temperature, humidity, wind speed, and more
-* View a 10-day forecast for the selected location
-* View a map of the selected location using Leaflet
-* View chart of probability of precipitation over the next 6 hours using Chart.js
+이 프로젝트는 다음과 같은 라이브러리를 사용합니다:
 
-## Dependencies
+### 프론트엔드 🎨
 
-This project uses the following dependencies:
+- tailwind CSS - 유틸리티 우선 CSS 프레임워크
+- react-redux - React에서 Redux를 사용하기 위한 바인딩 제공
+- reduxjs/toolkit - Redux 사용 사례를 단순화하는 유틸리티 제공
+- react-router-dom - React Router를 위한 DOM 바인딩
+- axios - 브라우저를 위한 Promise 기반 HTTP 클라이언트
+- chart.js - 다양한 차트 유형을 만들 수 있는 유연한 JavaScript 차트 라이브러리
+- classnames - 클래스명을 조건부로 결합하는 JavaScript 유틸리티
+- react-icons - React 프로젝트를 위한 무료 아이콘 세트
 
-### Front-end 🎨
-* tailwind CSS - A utility-first CSS framework packed with classes.
-* headlessui/react - A set of completely unstyled, fully accessible UI components for React.
-* react-redux - A package that provides bindings for React to use Redux.
-* reduxjs/toolkit - A package that provides utilities to simplify common Redux use cases, including store setup, creating reducers and actions, and creating middleware.
-* react-router-dom - A package that provides DOM bindings for React Router.
-* axios - A Promise-based HTTP client for the browser.
-* chart.js - A simple yet flexible JavaScript charting library that allows you to create a wide range of chart types.
-* classnames - A JavaScript utility for conditionally joining classNames together.
-* react-icons - A set of free icons for React projects.
-* heroicons/react - A set of free icons for React projects.
-* use-places-autocomplete - A React hook for implementing Google Places Autocomplete in application.
-* leaflet - A JavaScript library for mobile-friendly interactive maps.
+### 백엔드 ⚒️
 
-### Back-end ⚒️
-* Github Pages
+- Github Pages
+- Spring Boot
 
-### APIs Used
+### 사용된 API
 
-This project uses the following APIs:
+이 프로젝트는 다음과 같은 API들을 사용합니다:
 
-* Google Places API - used to search for locations and autocomplete
-* OpenWeather API - used to retrieve weather data and map layer for a given location
-* OpenMeteo API - used to retrieve UV Index data for a given location
-* Stadia Maps API - used to style map tiles.
+- OpenWeather API - 특정 위치의 날씨 데이터 및 지도 레이어 제공
+- OpenMeteo API - 특정 위치의 자외선 지수 데이터 제공
 
-## Installation
+## 설치 방법
 
-To run this application locally, you'll need to have Node.js and npm installed on your machine. Once you've cloned this repository, navigate to the project directory and run the following commands:
+이 애플리케이션을 로컬에서 실행하려면 React-vite가 설치되어 있어야 합니다. 이 저장소를 클론한 후, 프로젝트 디렉토리(Wheather Project)로 이동하여 다음 명령어를 실행하세요:
 
-* npm install
-* npm run dev
+- yarn
+- yarn dev
 
-This will install the necessary dependencies and start a local development server.
+서버로 이동 후 실행을 하면, DB가 생성됩니다.
 
-## Usage
+이렇게 하면 필요한 종속성이 설치되고 로컬 개발 서버가 시작됩니다.
 
-To use this application, simply enter the name of a city in the search bar and press the "Enter" key. The current weather conditions for that city will be displayed.
+## 사용 방법
 
-## Contributing
-
-If you'd like to contribute to this project, please open an issue or submit a pull request. Contributions are always welcome!
-
-## License
-
-This project is licensed under the MIT License.
+이 애플리케이션을 사용하려면 검색창에 도시 이름을 입력하고 "Enter" 키를 누르면 됩니다. 해당 도시의 현재 날씨 상태가 표시됩니다.
