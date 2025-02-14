@@ -1,16 +1,34 @@
 import React, { useState } from 'react';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { registerAPI, checkMidAPI } from '../../services/AuthAPI';
+import { registerAPI, checkMidAPI, loginAPI } from '../../services/AuthAPI';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 // MBTI 옵션 배열
 const MBTI_TYPES = [
-  'ISTJ', 'ISFJ', 'INFJ', 'INTJ',
-  'ISTP', 'ISFP', 'INFP', 'INTP',
-  'ESTP', 'ESFP', 'ENFP', 'ENTP',
-  'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ',
+  'ISTJ',
+  'ISFJ',
+  'INFJ',
+  'INTJ',
+  'ISTP',
+  'ISFP',
+  'INFP',
+  'INTP',
+  'ESTP',
+  'ESFP',
+  'ENFP',
+  'ENTP',
+  'ESTJ',
+  'ESFJ',
+  'ENFJ',
+  'ENTJ',
 ];
 
 const RegisterModal = ({ onClose }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   // 회원가입 폼 데이터 상태
   const [formData, setFormData] = useState({
     mid: '',
@@ -73,7 +91,8 @@ const RegisterModal = ({ onClose }) => {
 
   // 폼 제출 함수
   const handleSubmit = async () => {
-    const { mid, mpw, birthYear, birthMonth, birthDay, mbti, gender } = formData;
+    const { mid, mpw, birthYear, birthMonth, birthDay, mbti, gender } =
+      formData;
 
     // 필수 입력값에 대한 검증
     if (mid.length < 3 || mid.length > 12) {
@@ -122,16 +141,54 @@ const RegisterModal = ({ onClose }) => {
     }
 
     // 생년월일 문자열 생성 (YYYY-MM-DD)
-    const birthdate = `${birthYear}-${String(birthMonth).padStart(2, '0')}-${String(birthDay).padStart(2, '0')}`;
+    const birthdate = `${birthYear}-${String(birthMonth).padStart(
+      2,
+      '0',
+    )}-${String(birthDay).padStart(2, '0')}`;
     const userData = { ...formData, birthdate };
 
-    // 회원가입 API 호출
+    // 회원가입 및 자동 로그인 처리
     try {
       await registerAPI(userData);
       setSuccess('회원가입을 축하합니다!');
       setError(null);
-      // 1.2초 후 모달 닫기
-      setTimeout(() => onClose(), 1200);
+
+      // 회원가입 성공 후 자동 로그인 시도
+      try {
+        const data = await loginAPI({
+          mid: formData.mid,
+          mpw: formData.mpw,
+        });
+
+        if (data && data.accessToken) {
+          // 동적 임포트로 jwt-decode 모듈 사용
+          const { jwtDecode } = await import('jwt-decode');
+          const decoded = jwtDecode(data.accessToken);
+
+          // 인증 데이터 구성
+          const authData = {
+            user: {
+              mid: decoded.mid,
+              birthdate: decoded.birthdate,
+              mbti: decoded.mbti,
+              gender: decoded.gender,
+            },
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+          };
+
+          // Redux 스토어와 localStorage에 인증 데이터 저장
+          dispatch(setCredentials(authData));
+          localStorage.setItem('auth', JSON.stringify(authData));
+
+          // 모달 닫고 지정된 경로로 이동
+          onClose();
+          navigate('/weather-app-vite/');
+        }
+      } catch (loginErr) {
+        console.error('자동 로그인 실패:', loginErr);
+        setTimeout(() => onClose(), 1200);
+      }
     } catch (err) {
       setError(err.message);
       setSuccess(null);
