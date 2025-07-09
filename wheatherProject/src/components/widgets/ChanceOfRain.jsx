@@ -11,7 +11,7 @@ function ChanceOfRain() {
 
   // Chart JS
   const chartRef = useRef(null);
-  const [chart, setChart] = useState(null);
+  const [setChart] = useState(null);
 
   function convertToHour(dt, timezone) {
     let utc_time = new Date(dt * 1000);
@@ -102,7 +102,7 @@ function ChanceOfRain() {
       {/* TITLE */}
       <div className="flex flex-row gap-1">
         <IoRainy className="h-4 w-4" />
-        <div className="text-xs font-semibold">CHANCE OF RAIN</div>
+        <div className="text-xs font-semibold">강수 확률</div>
       </div>
       <div className="h-full w-full py-2">
         <canvas ref={chartRef} className="dark:invert" />
