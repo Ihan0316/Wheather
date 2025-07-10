@@ -115,7 +115,7 @@ function SearchBar() {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <div className="flex w-full flex-col">
+        <div className="relative flex w-full flex-col">
           <input
             type="text"
             placeholder={error ? error : "도시를 입력해주세요"}
@@ -133,6 +133,29 @@ function SearchBar() {
               }
             }}
           />
+          {/* 자동완성 드롭다운 */}
+          {city && (
+            <div className="absolute left-0 top-full z-50 mt-1 w-full rounded border border-gray-300 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+              {Object.entries(cityTranslationMap)
+                .filter(
+                  ([korName, engName]) =>
+                    korName.includes(city) ||
+                    engName.toLowerCase().includes(city.toLowerCase())
+                )
+                .map(([korName, engName]) => (
+                  <div
+                    key={korName}
+                    className="cursor-pointer p-2 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-neutral-700"
+                    onClick={() => {
+                      setCity(korName);
+                      setTimeout(() => handleSearch(), 0);
+                    }}
+                  >
+                    {korName} ({engName})
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
         <button
           onClick={handleSearch}

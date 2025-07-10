@@ -191,7 +191,7 @@ function Favorite() {
               }}
             />
             {searchTerm && (
-              <div className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white">
+              <div className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white dark:border-neutral-700 dark:bg-neutral-800">
                 {Object.entries(cityTranslationMap)
                   .filter(
                     ([korName, engName]) =>
@@ -201,7 +201,7 @@ function Favorite() {
                   .map(([korName, engName]) => (
                     <div
                       key={korName}
-                      className="cursor-pointer p-2 hover:bg-gray-100"
+                      className="cursor-pointer p-2 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-neutral-700"
                       onClick={() => {
                         handleAddCity(korName);
                         setSearchTerm("");
