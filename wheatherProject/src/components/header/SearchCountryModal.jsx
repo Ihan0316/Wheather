@@ -1,61 +1,60 @@
-import React, { useState } from 'react';
-import { IoCloseCircleOutline } from 'react-icons/io5';
+import React, { useState } from "react";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 // 🌍 한글 도시명을 영어로 변환하는 매핑
 const cityNameMap = {
-  서울: 'Seoul',
-  부산: 'Busan',
-  도쿄: 'Tokyo',
-  런던: 'London',
-  파리: 'Paris',
-  베를린: 'Berlin',
-  로스앤젤레스: 'Los Angeles',
-  뉴욕: 'New York',
-  밴쿠버: 'Vancouver',
-  시드니: 'Sydney',
-  멜버른: 'Melbourne',
-  카이로: 'Cairo',
-  케이프타운: 'Cape Town',
-  나이로비:'Nairobi',
-  웰링턴:'Wellington',
-  오클랜드:'Auckland',
-  마드리드:'Madrid',
-  샌프란시스코:'San Francisco',
-  라고스:'Lagos',
-  베이징:'Beijing',
-
+  서울: "Seoul",
+  부산: "Busan",
+  도쿄: "Tokyo",
+  런던: "London",
+  파리: "Paris",
+  베를린: "Berlin",
+  로스앤젤레스: "Los Angeles",
+  뉴욕: "New York",
+  밴쿠버: "Vancouver",
+  시드니: "Sydney",
+  멜버른: "Melbourne",
+  카이로: "Cairo",
+  케이프타운: "Cape Town",
+  나이로비: "Nairobi",
+  웰링턴: "Wellington",
+  오클랜드: "Auckland",
+  마드리드: "Madrid",
+  샌프란시스코: "San Francisco",
+  라고스: "Lagos",
+  베이징: "Beijing",
 };
 
 const reverseCityNameMap = Object.fromEntries(
-  Object.entries(cityNameMap).map(([key, value]) => [value, key]),
+  Object.entries(cityNameMap).map(([key, value]) => [value, key])
 );
 
 // 대륙, 나라, 도시 데이터
 const locationData = {
   아시아: {
-    한국: ['서울', '부산'],
-    일본: ['도쿄'],
-    중국: ['베이징'],
+    한국: ["서울", "부산"],
+    일본: ["도쿄"],
+    중국: ["베이징"],
   },
   유럽: {
-    영국: ['런던'],
-    프랑스: ['파리'],
-    독일: ['베를린'],
-    스페인 : ['마드리드'],
+    영국: ["런던"],
+    프랑스: ["파리"],
+    독일: ["베를린"],
+    스페인: ["마드리드"],
   },
   북아메리카: {
-    미국: ['로스앤젤레스', '뉴욕','샌프란시스코'],
-    캐나다: ['밴쿠버'],
+    미국: ["로스앤젤레스", "뉴욕", "샌프란시스코"],
+    캐나다: ["밴쿠버"],
   },
   오세아니아: {
-    호주: ['시드니', '멜버른'],
-    뉴질랜드: ['오클랜드','웰링턴'],
+    호주: ["시드니", "멜버른"],
+    뉴질랜드: ["오클랜드", "웰링턴"],
   },
   아프리카: {
-    이집트: ['카이로'],
-    남아프리카공화국: ['케이프타운'],
-    케냐:['나이로비'],
-    나이지리아:['라고스']
+    이집트: ["카이로"],
+    남아프리카공화국: ["케이프타운"],
+    케냐: ["나이로비"],
+    나이지리아: ["라고스"],
   },
 };
 
@@ -88,7 +87,7 @@ export const SearchCountryModal = ({ onClose }) => {
     // 한글 도시명을 영어로 변환 (없으면 원래 한글 그대로 사용)
     const cityName = cityNameMap[city] || city;
     const encodedCity = encodeURIComponent(cityName);
-    const apiKey =  import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
+    const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
     // 자기 api 키 찾아서 무조건 넣어야함!!!! 아니면 console 에 오류 뜸 !
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&appid=${apiKey}&units=metric&lang=kr`;
 
@@ -96,15 +95,13 @@ export const SearchCountryModal = ({ onClose }) => {
       const response = await fetch(apiUrl);
       const data = await response.json();
 
-      console.log('API Response:', data); // 🔍 디버깅용
-
       if (data.cod !== 200) {
         throw new Error(`API 오류: ${data.message}`);
       }
 
       setWeatherData(data);
     } catch (error) {
-      console.error('날씨 정보를 가져오는 중 오류 발생:', error);
+      console.error("날씨 정보를 가져오는 중 오류 발생:", error);
       setWeatherData(null);
     }
   };
@@ -171,7 +168,7 @@ export const SearchCountryModal = ({ onClose }) => {
                     >
                       {city}
                     </button>
-                  ),
+                  )
                 )}
               </div>
             </div>
@@ -196,7 +193,10 @@ export const SearchCountryModal = ({ onClose }) => {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">🌈 날씨:</span>
-                  <span>{weatherData.weather[0].description} ({weatherData.weather[0].main})</span>
+                  <span>
+                    {weatherData.weather[0].description} (
+                    {weatherData.weather[0].main})
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">🌫️ 습도:</span>

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { IoCloseCircleOutline } from 'react-icons/io5';
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../../features/auth/authSlice';
-import { loginAPI } from '../../services/AuthAPI';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { IoCloseCircleOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../features/auth/authSlice";
+import { loginAPI } from "../../services/AuthAPI";
+import { useNavigate } from "react-router-dom";
 
 const LoginModal = ({ onClose }) => {
   // 로그인 폼 데이터 및 오류 메시지 관리
-  const [credentials, setCredentialsState] = useState({ mid: '', mpw: '' });
+  const [credentials, setCredentialsState] = useState({ mid: "", mpw: "" });
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const LoginModal = ({ onClose }) => {
 
   // 엔터 키 입력 시 제출 실행
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSubmit();
     }
   };
@@ -31,18 +31,15 @@ const LoginModal = ({ onClose }) => {
   const handleSubmit = async () => {
     try {
       const data = await loginAPI(credentials);
-      console.log('Received token data:', data);
-      console.log('AccessToken string:', data.accessToken);
 
       // 토큰 형식 확인 (JWT는 점(.) 3개로 구분)
-      if (!data.accessToken || data.accessToken.split('.').length !== 3) {
-        throw new Error('토큰 형식이 올바르지 않습니다!');
+      if (!data.accessToken || data.accessToken.split(".").length !== 3) {
+        throw new Error("토큰 형식이 올바르지 않습니다!");
       }
 
       // 동적 임포트로 jwt-decode 모듈 사용하여 토큰 디코딩
-      const { jwtDecode } = await import('jwt-decode');
+      const { jwtDecode } = await import("jwt-decode");
       const decoded = jwtDecode(data.accessToken);
-      console.log('Decoded token:', decoded);
 
       // 인증 데이터 구성
       const authData = {
@@ -58,13 +55,13 @@ const LoginModal = ({ onClose }) => {
 
       // Redux 스토어와 localStorage에 인증 데이터 저장
       dispatch(setCredentials(authData));
-      localStorage.setItem('auth', JSON.stringify(authData));
+      localStorage.setItem("auth", JSON.stringify(authData));
 
       // 모달 닫고 지정된 경로로 이동
       onClose();
-      navigate('/weather-app-vite/');
+      navigate("/weather-app-vite/");
     } catch (err) {
-      console.error('로그인 처리 중 오류:', err);
+      console.error("로그인 처리 중 오류:", err);
       setError(err.message);
     }
   };

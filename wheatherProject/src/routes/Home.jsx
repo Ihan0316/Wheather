@@ -1,15 +1,15 @@
-import WeatherCard from '../components/widgets/WeatherCard';
-import HourlyForecast from '../components/widgets/HourlyForecast';
-import AirPollution from '../components/widgets/AirPollution';
-import SunsetSunrise from '../components/widgets/SunsetSunrise';
-import Wind from '../components/widgets/Wind';
-import UVIndex from '../components/widgets/UVIndex';
-import Precipitation from '../components/widgets/Precipitation';
-import FeelsLike from '../components/widgets/FeelsLike';
-import Humidity from '../components/widgets/Humidity';
-import Visibility from '../components/widgets/Visibility';
-import Pressure from '../components/widgets/Pressure';
-import ChanceOfRain from '../components/widgets/ChanceOfRain';
+import WeatherCard from "../components/widgets/WeatherCard";
+import HourlyForecast from "../components/widgets/HourlyForecast";
+import AirPollution from "../components/widgets/AirPollution";
+import SunsetSunrise from "../components/widgets/SunsetSunrise";
+import Wind from "../components/widgets/Wind";
+import UVIndex from "../components/widgets/UVIndex";
+import Precipitation from "../components/widgets/Precipitation";
+import FeelsLike from "../components/widgets/FeelsLike";
+import Humidity from "../components/widgets/Humidity";
+import Visibility from "../components/widgets/Visibility";
+import Pressure from "../components/widgets/Pressure";
+import ChanceOfRain from "../components/widgets/ChanceOfRain";
 
 function Home() {
   return (

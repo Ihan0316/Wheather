@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import FavoriteWeatherCard from '../components/widgets/FavoriteWeatherCard';
-import axios from 'axios';
-import { cityTranslationMap } from '../utils/cityTranslations';
+import { useEffect, useState } from "react";
+import FavoriteWeatherCard from "../components/widgets/FavoriteWeatherCard";
+import axios from "axios";
+import { cityTranslationMap } from "../utils/cityTranslations";
 
 function Favorite() {
   const [cities, setCities] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [weather, setweather] = useState([]);
 
   const fetchCityCoordinates = async (cityName) => {
@@ -15,7 +15,7 @@ function Favorite() {
 
     try {
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${englishCityName}&appid=${apiKey}&units=metric&lang=kr`,
+        `https://api.openweathermap.org/data/2.5/weather?q=${englishCityName}&appid=${apiKey}&units=metric&lang=kr`
       );
       return response.data;
     } catch (error) {
@@ -28,10 +28,10 @@ function Favorite() {
     const existingCity = cities.find(
       (city) =>
         city.name === cityName ||
-        city.englishName.toLowerCase() === cityName.toLowerCase(),
+        city.englishName.toLowerCase() === cityName.toLowerCase()
     );
     if (existingCity) {
-      alert('이미 추가된 도시입니다.');
+      alert("이미 추가된 도시입니다.");
       return;
     }
 
@@ -55,14 +55,14 @@ function Favorite() {
       // 영문 도시명으로 직접 API 호출
       const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric&lang=kr`,
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric&lang=kr`
       );
 
       if (response.data.cod === 200) {
         // 영문 도시명에 해당하는 한글 도시명 찾기
         const koreanName =
           Object.entries(cityTranslationMap).find(
-            ([kor, eng]) => eng.toLowerCase() === cityName.toLowerCase(),
+            ([kor, eng]) => eng.toLowerCase() === cityName.toLowerCase()
           )?.[0] || cityName;
 
         const newCity = {
@@ -75,8 +75,8 @@ function Favorite() {
         setCities([...cities, newCity]);
       }
     } catch (error) {
-      console.error('Error adding city:', error);
-      alert('도시를 찾을 수 없습니다.');
+      console.error("Error adding city:", error);
+      alert("도시를 찾을 수 없습니다.");
     }
   };
 
@@ -84,9 +84,9 @@ function Favorite() {
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
       // localStorage에서 'auth' 가져오기
-      const storedAuth = localStorage.getItem('auth');
+      const storedAuth = localStorage.getItem("auth");
       if (!storedAuth) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
         return;
       }
       const parsed = JSON.parse(storedAuth);
@@ -95,20 +95,19 @@ function Favorite() {
 
       const response = await axios.get(`${SERVER_URL}/api/weather`, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       });
 
-      console.log('조회 완료:', response.data);
       setweather(response.data);
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
       } else {
-        console.error('조회 실패:', error);
-        alert('즐겨찾기 조회 중 오류가 발생했습니다.');
+        console.error("조회 실패:", error);
+        alert("즐겨찾기 조회 중 오류가 발생했습니다.");
       }
     }
   };
@@ -116,10 +115,10 @@ function Favorite() {
   // 일괄 즐겨찾기 추가 함수
   const addAllToFavorites = async () => {
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
-    const storedAuth = localStorage.getItem('auth');
+    const storedAuth = localStorage.getItem("auth");
 
     if (!storedAuth) {
-      alert('로그인이 필요한 서비스입니다.');
+      alert("로그인이 필요한 서비스입니다.");
       return;
     }
 
@@ -128,7 +127,7 @@ function Favorite() {
     const userMid = parsedAuth.user?.mid;
 
     if (!token || !userMid) {
-      alert('로그인 정보가 올바르지 않습니다.');
+      alert("로그인 정보가 올바르지 않습니다.");
       return;
     }
 
@@ -145,24 +144,24 @@ function Favorite() {
 
         await axios.post(`${SERVER_URL}/api/weather`, weatherData, {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         });
       }
 
-      alert('모든 도시가 즐겨찾기에 추가되었습니다.');
+      alert("모든 도시가 즐겨찾기에 추가되었습니다.");
       getFavorite(); // 즐겨찾기 목록 새로고침
       setCities([]); // 검색 목록 초기화
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
       } else if (error.response && error.response.status === 403) {
-        alert('권한이 없습니다. 다시 로그인해 주세요.');
+        alert("권한이 없습니다. 다시 로그인해 주세요.");
       } else {
-        console.error('일괄 저장 실패:', error);
-        alert('즐겨찾기 추가 중 오류가 발생했습니다.');
+        console.error("일괄 저장 실패:", error);
+        alert("즐겨찾기 추가 중 오류가 발생했습니다.");
       }
     }
   };
@@ -182,11 +181,11 @@ function Favorite() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && searchTerm.trim()) {
+              if (e.key === "Enter" && searchTerm.trim()) {
                 handleAddCity(searchTerm.trim());
                 e.preventDefault();
-                e.target.value = '';
-                setSearchTerm('');
+                e.target.value = "";
+                setSearchTerm("");
               }
             }}
           />
@@ -196,7 +195,7 @@ function Favorite() {
                 .filter(
                   ([korName, engName]) =>
                     korName.includes(searchTerm) ||
-                    engName.toLowerCase().includes(searchTerm.toLowerCase()),
+                    engName.toLowerCase().includes(searchTerm.toLowerCase())
                 )
                 .map(([korName, engName]) => (
                   <div
@@ -204,7 +203,7 @@ function Favorite() {
                     className="cursor-pointer p-2 hover:bg-gray-100"
                     onClick={() => {
                       handleAddCity(korName);
-                      setSearchTerm('');
+                      setSearchTerm("");
                     }}
                   >
                     {korName} ({engName})

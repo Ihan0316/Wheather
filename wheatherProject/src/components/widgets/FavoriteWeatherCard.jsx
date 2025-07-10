@@ -210,8 +210,6 @@ function FavoriteWeatherCard({
               </div>
             </div>
 
-            <WeatherIcon iconType={data.weather[0].icon} size={50} />
-
             <div className="flex justify-end">
               {isFavorite ? (
                 <button onClick={deleteFavorite} className="text-red-500">

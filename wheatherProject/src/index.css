@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Kardust-Bold";
+  font-family: "BOLDE";
   font-weight: 700;
-  src: url("/fonts/Kardust-Bold.woff2") format("woff"),
-    url("/fonts/Kardust-Bold.woff2") format("woff2");
+  src: url("/fonts/BOLDE.woff2") format("woff2"),
+    url("/fonts/BOLDE.woff") format("woff");
 }
 
 /* Special styling for WebKit/Blink */
