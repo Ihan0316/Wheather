@@ -171,92 +171,94 @@ function Favorite() {
   }, []);
 
   return (
-    <main className="container mx-auto">
-      <div className="flex flex-col gap-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="도시 이름을 한글 또는 영어로 입력하세요"
-            className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && searchTerm.trim()) {
-                handleAddCity(searchTerm.trim());
-                e.preventDefault();
-                e.target.value = "";
-                setSearchTerm("");
-              }
-            }}
-          />
-          {searchTerm && (
-            <div className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white">
-              {Object.entries(cityTranslationMap)
-                .filter(
-                  ([korName, engName]) =>
-                    korName.includes(searchTerm) ||
-                    engName.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map(([korName, engName]) => (
-                  <div
-                    key={korName}
-                    className="cursor-pointer p-2 hover:bg-gray-100"
-                    onClick={() => {
-                      handleAddCity(korName);
-                      setSearchTerm("");
-                    }}
-                  >
-                    {korName} ({engName})
-                  </div>
-                ))}
+    <div className="fade-in">
+      <main className="container mx-auto">
+        <div className="flex flex-col gap-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="도시 이름을 한글 또는 영어로 입력하세요"
+              className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && searchTerm.trim()) {
+                  handleAddCity(searchTerm.trim());
+                  e.preventDefault();
+                  e.target.value = "";
+                  setSearchTerm("");
+                }
+              }}
+            />
+            {searchTerm && (
+              <div className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white">
+                {Object.entries(cityTranslationMap)
+                  .filter(
+                    ([korName, engName]) =>
+                      korName.includes(searchTerm) ||
+                      engName.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map(([korName, engName]) => (
+                    <div
+                      key={korName}
+                      className="cursor-pointer p-2 hover:bg-gray-100"
+                      onClick={() => {
+                        handleAddCity(korName);
+                        setSearchTerm("");
+                      }}
+                    >
+                      {korName} ({engName})
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+          {cities.length > 0 && (
+            <div className="flex justify-end">
+              <button
+                onClick={addAllToFavorites}
+                className="whitespace-nowrap rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+              >
+                모든 도시 즐겨찾기 추가
+              </button>
             </div>
           )}
-        </div>
-        {cities.length > 0 && (
-          <div className="flex justify-end">
-            <button
-              onClick={addAllToFavorites}
-              className="whitespace-nowrap rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
-            >
-              모든 도시 즐겨찾기 추가
-            </button>
+          <div className="flex flex-wrap gap-4">
+            {cities.map((city, i) => (
+              <div
+                key={`${city.lat}-${city.lng}`}
+                className="w-full p-4 sm:w-1/3 lg:w-1/4"
+              >
+                <FavoriteWeatherCard
+                  lat={city.lat}
+                  lng={city.lng}
+                  onFavoriteAdd={getFavorite}
+                />
+              </div>
+            ))}
           </div>
-        )}
-        <div className="flex flex-wrap gap-4">
-          {cities.map((city, i) => (
-            <div
-              key={`${city.lat}-${city.lng}`}
-              className="w-full p-4 sm:w-1/3 lg:w-1/4"
-            >
-              <FavoriteWeatherCard
-                lat={city.lat}
-                lng={city.lng}
-                onFavoriteAdd={getFavorite}
-              />
-            </div>
-          ))}
-        </div>
 
-        <div>즐겨찾기 목록</div>
-        <div className="flex flex-wrap gap-4">
-          {weather.map((city, i) => (
-            <div
-              key={`${city.latitude}-${city.longitude}`}
-              className="w-full p-4 sm:w-1/3 lg:w-1/4"
-            >
-              <FavoriteWeatherCard
-                lat={city.latitude}
-                lng={city.longitude}
-                isFavorite={true}
-                id={city.id}
-                setWeather={setweather}
-                onFavoriteAdd={getFavorite}
-              />
-            </div>
-          ))}
+          <div>즐겨찾기 목록</div>
+          <div className="flex flex-wrap gap-4">
+            {weather.map((city, i) => (
+              <div
+                key={`${city.latitude}-${city.longitude}`}
+                className="w-full p-4 sm:w-1/3 lg:w-1/4"
+              >
+                <FavoriteWeatherCard
+                  lat={city.latitude}
+                  lng={city.longitude}
+                  isFavorite={true}
+                  id={city.id}
+                  setWeather={setweather}
+                  onFavoriteAdd={getFavorite}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
 

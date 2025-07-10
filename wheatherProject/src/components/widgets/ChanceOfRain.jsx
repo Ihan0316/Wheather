@@ -4,10 +4,8 @@ import { useSelector } from "react-redux";
 import { IoRainy } from "react-icons/io5";
 import Chart from "chart.js/auto";
 
-function ChanceOfRain() {
-  //   Access to RTX Query cashed data
-  const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
-  const { data, isSuccess } = useGetHourlyForecastQuery({ lat, lng });
+function ChanceOfRain({ data }) {
+  if (!data) return null;
 
   // Chart JS
   const chartRef = useRef(null);
@@ -25,7 +23,7 @@ function ChanceOfRain() {
   }
 
   useEffect(() => {
-    if (chartRef.current && isSuccess) {
+    if (chartRef.current && data) {
       const timezone = data.city.timezone;
       const hourlyData = data.list.slice(0, 6); // Get the first 6 hourly data points
       const rainData = hourlyData.map(({ dt, pop }) => ({
@@ -93,19 +91,26 @@ function ChanceOfRain() {
         newChart.destroy();
       };
     }
-  }, [data, isSuccess]);
+  }, [data]);
 
   return (
-    <div className="flex h-40 flex-col overflow-hidden rounded-3xl bg-white p-4 shadow-lg dark:bg-neutral-800">
-      {/* TITLE */}
-      <div className="flex flex-row gap-1">
-        <IoRainy className="h-4 w-4" />
-        <div className="text-xs font-semibold">강수 확률</div>
-      </div>
-      <div className="h-full w-full py-2">
-        <canvas ref={chartRef} className="dark:invert" />
-      </div>
-    </div>
+    <>
+      {data && (
+        <div
+          key={`${data.lat},${data.lng}`}
+          className="flex h-40 w-full flex-col items-stretch overflow-hidden rounded-3xl bg-white p-4 shadow-lg dark:bg-neutral-800"
+        >
+          {/* TITLE */}
+          <div className="flex flex-row gap-1">
+            <IoRainy className="h-4 w-4" />
+            <div className="text-xs font-semibold">강수 확률</div>
+          </div>
+          <div className="h-full w-full py-2">
+            <canvas ref={chartRef} className="dark:invert" />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -40,3 +40,16 @@ input[type="range"]::-ms-thumb {
 html {
   overflow-y: scroll;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.7s ease;
+}

@@ -47,7 +47,7 @@ function CurrentWeatherCard() {
       {isSuccess &&
         [data].map((item, i) => (
           <div
-            key={i}
+            key={`${lat},${lng}`}
             className="flex h-[21rem] w-[24rem] flex-col overflow-hidden rounded-3xl shadow-lg dark:bg-neutral-800"
           >
             <div className="flex flex-row justify-between bg-neutral-50 p-6 dark:bg-neutral-900">

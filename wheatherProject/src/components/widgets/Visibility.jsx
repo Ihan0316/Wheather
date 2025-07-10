@@ -2,13 +2,8 @@ import { useSelector } from "react-redux";
 import { MdVisibility } from "react-icons/md";
 import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
 
-function Visibility() {
-  //   Access to RTX Query cashed data
-  const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
-  const { data, isSuccess } = useGetCurrentWeatherQuery({
-    lat,
-    lng,
-  });
+function Visibility({ data }) {
+  if (!data) return null;
 
   function distanceFormating(distance) {
     if (distance >= 1000) {
@@ -38,21 +33,21 @@ function Visibility() {
 
   return (
     <>
-      {isSuccess && (
-        <div className="flex h-40 w-full flex-col items-stretch overflow-hidden rounded-3xl bg-white p-4 shadow-lg dark:bg-neutral-800">
-          {/* TITLE */}
-          <div className="flex flex-row gap-1">
-            <MdVisibility className="h-4 w-4" />
-            <div className="text-xs font-semibold">가시거리</div>
-          </div>
-          <div className="mt-2 h-full">
-            <div className="text-2xl font-semibold">
-              {distanceFormating(data.visibility)}
-            </div>
-          </div>
-          <div className="text-xs">{dataProcessor(data.visibility)}</div>
+      {/* isSuccess && ( */}
+      <div className="flex h-40 w-full flex-col items-stretch overflow-hidden rounded-3xl bg-white p-4 shadow-lg dark:bg-neutral-800">
+        {/* TITLE */}
+        <div className="flex flex-row gap-1">
+          <MdVisibility className="h-4 w-4" />
+          <div className="text-xs font-semibold">가시거리</div>
         </div>
-      )}
+        <div className="mt-2 h-full">
+          <div className="text-2xl font-semibold">
+            {distanceFormating(data.visibility)}
+          </div>
+        </div>
+        <div className="text-xs">{dataProcessor(data.visibility)}</div>
+      </div>
+      {/* ) */}
     </>
   );
 }

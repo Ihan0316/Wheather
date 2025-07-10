@@ -3,35 +3,9 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { HiSun } from "react-icons/hi";
 
-function UVIndex() {
-  const { lat, lng } = useSelector((state) => state.geolocation.geolocation);
-  const [data, setData] = useState(null);
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.open-meteo.com/v1/forecast`,
-          {
-            headers: {},
-            params: {
-              latitude: lat,
-              longitude: lng,
-              daily: "uv_index_max,uv_index_clear_sky_max",
-              timezone: "auto",
-            },
-          }
-        );
-        setData(response.data);
-        setIndex(response.data.daily.uv_index_max[0]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [lat, lng]);
-
+function UVIndex({ data }) {
+  if (!data) return null;
+  const index = data.daily.uv_index_max[0];
   const handleChange = () => {
     return;
   };
@@ -78,7 +52,10 @@ function UVIndex() {
   return (
     <>
       {data && data.daily.uv_index_max[0] && (
-        <div className="flex h-40 w-full flex-col items-stretch overflow-hidden rounded-3xl bg-white p-4 shadow-lg dark:bg-neutral-800">
+        <div
+          key={`uv-index`}
+          className="flex h-40 w-full flex-col items-stretch overflow-hidden rounded-3xl bg-white p-4 shadow-lg dark:bg-neutral-800"
+        >
           {/* TITLE */}
           <div className="flex flex-row gap-1">
             <HiSun className="h-4 w-4" />
