@@ -141,12 +141,18 @@ function SearchBar() {
 
       // 2) 응답에서 lat/lon, 도시명, 국가 등을 추출
       const { lon, lat } = data.coord;
-      const cityName = data.name; // 예: "서울" (한글로 변환된 도시명)
+      const cityName = data.name; // 예: "Seoul" (영문)
       const country = data.sys.country; // 예: "KR"
+
+      // 영문 → 한글 변환
+      const cityNameKor =
+        Object.entries(cityTranslationMap).find(
+          ([, eng]) => eng === cityName
+        )?.[0] || cityName;
 
       // 3) OtherCities 클릭과 같은 방식으로 redux store 업데이트
       dispatch(saveGeoCode({ lat, lng: lon }));
-      dispatch(saveLocation(`${cityName}, ${country}`));
+      dispatch(saveLocation(`${cityNameKor}, ${country}`));
 
       // 4) 스크롤을 맨 위로 (OtherCities에 있던 scrollTo(0, 0)와 동일)
       window.scrollTo(0, 0);
