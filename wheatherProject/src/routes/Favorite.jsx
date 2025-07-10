@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import FavoriteWeatherCard from "../components/widgets/FavoriteWeatherCard";
 import axios from "axios";
 import { cityTranslationMap } from "../utils/cityTranslations";
@@ -7,6 +7,49 @@ function Favorite() {
   const [cities, setCities] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [weather, setweather] = useState([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const dropdownRef = useRef(null);
+
+  // 자동완성 후보 리스트
+  const suggestions = Object.entries(cityTranslationMap).filter(
+    ([korName, engName]) =>
+      korName.includes(searchTerm) ||
+      engName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // input에서 방향키/엔터 처리
+  const handleKeyDown = (e) => {
+    if (!searchTerm || suggestions.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev + 1) % suggestions.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex(
+        (prev) => (prev - 1 + suggestions.length) % suggestions.length
+      );
+    } else if (e.key === "Enter") {
+      if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
+        const [korName] = suggestions[highlightedIndex];
+        handleAddCity(korName);
+        setSearchTerm("");
+      } else if (searchTerm.trim()) {
+        handleAddCity(searchTerm.trim());
+        setSearchTerm("");
+      }
+      e.preventDefault();
+    }
+  };
+
+  // input 값이 바뀌면 하이라이트 인덱스 초기화
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [searchTerm]);
+
+  // input blur 시 드롭다운 닫힘(선택 유지)
+  const handleBlur = (e) => {
+    setTimeout(() => setHighlightedIndex(-1), 100);
+  };
 
   const fetchCityCoordinates = async (cityName) => {
     const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
@@ -181,35 +224,31 @@ function Favorite() {
               className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && searchTerm.trim()) {
-                  handleAddCity(searchTerm.trim());
-                  e.preventDefault();
-                  e.target.value = "";
-                  setSearchTerm("");
-                }
-              }}
+              onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
             />
-            {searchTerm && (
-              <div className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-                {Object.entries(cityTranslationMap)
-                  .filter(
-                    ([korName, engName]) =>
-                      korName.includes(searchTerm) ||
-                      engName.toLowerCase().includes(searchTerm.toLowerCase())
-                  )
-                  .map(([korName, engName]) => (
-                    <div
-                      key={korName}
-                      className="cursor-pointer p-2 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-neutral-700"
-                      onClick={() => {
-                        handleAddCity(korName);
-                        setSearchTerm("");
-                      }}
-                    >
-                      {korName} ({engName})
-                    </div>
-                  ))}
+            {searchTerm && suggestions.length > 0 && (
+              <div
+                ref={dropdownRef}
+                className="absolute z-10 mt-1 w-full rounded border border-gray-300 bg-white dark:border-neutral-700 dark:bg-neutral-800"
+              >
+                {suggestions.map(([korName, engName], idx) => (
+                  <div
+                    key={korName}
+                    className={`cursor-pointer p-2 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-neutral-700 ${
+                      highlightedIndex === idx
+                        ? "bg-gray-200 dark:bg-neutral-700"
+                        : ""
+                    }`}
+                    onMouseEnter={() => setHighlightedIndex(idx)}
+                    onMouseDown={() => {
+                      handleAddCity(korName);
+                      setSearchTerm("");
+                    }}
+                  >
+                    {korName} ({engName})
+                  </div>
+                ))}
               </div>
             )}
           </div>

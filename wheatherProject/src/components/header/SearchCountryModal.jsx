@@ -1,33 +1,6 @@
 import React, { useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
-
-// 🌍 한글 도시명을 영어로 변환하는 매핑
-const cityNameMap = {
-  서울: "Seoul",
-  부산: "Busan",
-  도쿄: "Tokyo",
-  런던: "London",
-  파리: "Paris",
-  베를린: "Berlin",
-  로스앤젤레스: "Los Angeles",
-  뉴욕: "New York",
-  밴쿠버: "Vancouver",
-  시드니: "Sydney",
-  멜버른: "Melbourne",
-  카이로: "Cairo",
-  케이프타운: "Cape Town",
-  나이로비: "Nairobi",
-  웰링턴: "Wellington",
-  오클랜드: "Auckland",
-  마드리드: "Madrid",
-  샌프란시스코: "San Francisco",
-  라고스: "Lagos",
-  베이징: "Beijing",
-};
-
-const reverseCityNameMap = Object.fromEntries(
-  Object.entries(cityNameMap).map(([key, value]) => [value, key])
-);
+import { cityTranslationMap } from "../../utils/cityTranslations";
 
 // 대륙, 나라, 도시 데이터
 const locationData = {
@@ -85,7 +58,7 @@ export const SearchCountryModal = ({ onClose }) => {
     setWeatherData(null); // 도시를 선택하면 날씨 정보 초기화
 
     // 한글 도시명을 영어로 변환 (없으면 원래 한글 그대로 사용)
-    const cityName = cityNameMap[city] || city;
+    const cityName = cityTranslationMap[city] || city;
     const encodedCity = encodeURIComponent(cityName);
     const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
     // 자기 api 키 찾아서 무조건 넣어야함!!!! 아니면 console 에 오류 뜸 !
