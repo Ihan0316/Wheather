@@ -1,14 +1,65 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
-import { saveLocation } from '../../features/search/searchSlice';
-import { cityTranslationMap } from '../../utils/cityTranslations';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { saveGeoCode } from "../../features/geolocation/geolocationSlice";
+import { saveLocation } from "../../features/search/searchSlice";
+import { cityTranslationMap } from "../../utils/cityTranslations";
 
 function SearchBar() {
-  const [city, setCity] = useState('');
-  const [error, setError] = useState('');
+  const [city, setCity] = useState("");
+  const [error, setError] = useState("");
+  const [isFading, setIsFading] = useState(false);
   const dispatch = useDispatch();
+
+  // 에러 메시지 3초 뒤 자동 사라짐 + fade-out 효과
+  useEffect(() => {
+    if (error) {
+      setIsFading(false);
+      const fadeTimer = setTimeout(() => {
+        setIsFading(true);
+      }, 2500); // 3초 중 마지막 0.5초만 fade
+
+      const clearTimer = setTimeout(() => {
+        setError("");
+        setCity("");
+        setIsFading(false);
+      }, 3000);
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(clearTimer);
+      };
+    }
+  }, [error]);
+
+  // 에러 발생 시에도 fade-in 효과 적용
+  useEffect(() => {
+    if (error) {
+      setIsFading(true); // 에러 발생 시 먼저 투명하게
+      // 0.5초 후 서서히 나타남 (fade-in)
+      const fadeInTimer = setTimeout(() => {
+        setIsFading(false);
+      }, 500);
+
+      // 2.5초 후 다시 투명하게 (fade-out)
+      const fadeOutTimer = setTimeout(() => {
+        setIsFading(true);
+      }, 2500);
+
+      // 3초 후 에러/입력값 초기화
+      const clearTimer = setTimeout(() => {
+        setError("");
+        setCity("");
+        setIsFading(false);
+      }, 3000);
+
+      return () => {
+        clearTimeout(fadeInTimer);
+        clearTimeout(fadeOutTimer);
+        clearTimeout(clearTimer);
+      };
+    }
+  }, [error]);
 
   // .env 또는 vite.config에서 API_KEY 가져온다고 가정
   const API_KEY = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
@@ -21,11 +72,11 @@ function SearchBar() {
     const cityInEnglish = cityTranslationMap[city] || city; // 변환 맵에 없으면 원래 도시명 사용
 
     try {
-      setError('');
+      setError("");
 
       // 1) OpenWeatherMap 'weather?q=도시명' API 호출 (lang=kr 추가)
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityInEnglish}&appid=${API_KEY}&units=metric&lang=kr`,
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityInEnglish}&appid=${API_KEY}&units=metric&lang=kr`
       );
 
       const data = response.data;
@@ -54,39 +105,42 @@ function SearchBar() {
       window.scrollTo(0, 0);
 
       // 검색창 초기화(원하시는 경우)
-      setCity('');
+      setCity("");
     } catch (err) {
       console.error(err);
-      setError('해당 도시 정보를 가져올 수 없습니다.');
+      setError("해당 도시 정보를 가져올 수 없습니다.");
     }
   };
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
-        <input
-          type="text"
-          placeholder="도시를 입력해주세요"
-          className="w-full rounded-lg bg-neutral-50 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:text-gray-100 dark:placeholder-gray-400 sm:text-sm"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          // 엔터 키를 누를 때 handleSearch 호출
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch();
-            }
-          }}
-        />
+      <div className="flex items-center gap-2">
+        <div className="flex w-full flex-col">
+          <input
+            type="text"
+            placeholder={error ? error : "도시를 입력해주세요"}
+            className={`w-full rounded-lg border bg-neutral-50 px-4 py-2.5 placeholder-gray-500 outline-none focus:ring-0 dark:bg-neutral-900 dark:placeholder-gray-400 sm:text-sm ${
+              error
+                ? "border-2 border-red-500 text-red-500 placeholder-red-400 transition-opacity duration-500 dark:text-red-400"
+                : "border-2 border-gray-500 text-gray-900 dark:text-gray-100"
+            } ${isFading ? "opacity-0" : "opacity-100"}`}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            // 엔터 키를 누를 때 handleSearch 호출
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
+        </div>
         <button
           onClick={handleSearch}
-          className="whitespace-nowrap rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+          className="h-full min-h-[44px] whitespace-nowrap rounded bg-gray-500 px-4 py-2 py-0 text-white hover:bg-gray-600"
         >
           검색
         </button>
       </div>
-
-      {/* 에러 메시지 */}
-      {error && <div className="text-sm text-red-500">{error}</div>}
     </div>
   );
 }

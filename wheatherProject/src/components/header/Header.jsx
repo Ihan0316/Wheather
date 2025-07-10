@@ -1,18 +1,18 @@
 // src/components/header/Header.jsx
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Location from './Location';
-import SearchBar from './SearchBar';
-import ThemeSwitchToggle from './ThemeSwitchToggle';
-import { MapPinIcon } from '@heroicons/react/20/solid';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearCredentials } from '../../features/auth/authSlice';
-import FortuneRecommendation from '../header/FortuneRecommendation';
-import { SearchCountryModal } from './SearchCountryModal';
-import LoginModal from '../auth/LoginModal';
-import RegisterModal from '../auth/RegisterModal';
-import { saveGeoCode } from '../../features/geolocation/geolocationSlice';
-import { saveLocation } from '../../features/search/searchSlice';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Location from "./Location";
+import SearchBar from "./SearchBar";
+import ThemeSwitchToggle from "./ThemeSwitchToggle";
+import { MapPinIcon } from "@heroicons/react/20/solid";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCredentials } from "../../features/auth/authSlice";
+import FortuneRecommendation from "../header/FortuneRecommendation";
+import { SearchCountryModal } from "./SearchCountryModal";
+import LoginModal from "../auth/LoginModal";
+import RegisterModal from "../auth/RegisterModal";
+import { saveGeoCode } from "../../features/geolocation/geolocationSlice";
+import { saveLocation } from "../../features/search/searchSlice";
 function Header() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
@@ -32,7 +32,7 @@ function Header() {
           fetch(
             `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
               import.meta.env.VITE_API_KEY_OPENWEATHERMAP
-            }`,
+            }`
           )
             .then((response) => response.json())
             .then((data) => {
@@ -41,21 +41,21 @@ function Header() {
               dispatch(saveGeoCode({ lat, lng: lon }));
             })
             .catch((error) => {
-              console.error('Error fetching weather data:', error);
+              console.error("Error fetching weather data:", error);
             });
         },
         (error) => {
-          console.error('Error getting location:', error.message);
-        },
+          console.error("Error getting location:", error.message);
+        }
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      console.error("Geolocation is not supported by this browser.");
     }
   };
   // 버튼 클릭 시 로그인 되어 있지 않으면 경고 띄우고, 로그인 되었다면 해당 모달/페이지로 이동
   const requireAuth = (callback) => {
     if (!auth.user) {
-      alert('해당 기능은 로그인 후 이용하실 수 있습니다.');
+      alert("해당 기능은 로그인 후 이용하실 수 있습니다.");
     } else {
       callback();
     }
@@ -63,10 +63,10 @@ function Header() {
   return (
     <>
       <nav className="my-4 flex items-center justify-between pr-6">
-        <div className="invisible md:visible">
+        <div className="flex flex-1 justify-start">
           <Location />
         </div>
-        <div className="mx-auto flex items-center gap-2">
+        <div className="mx-auto flex w-[600px] flex-none items-center justify-center gap-2">
           {auth.user ? (
             <button
               onClick={() => requireAuth(() => setShowSearchCountryModal(true))}
@@ -77,7 +77,7 @@ function Header() {
           ) : (
             <button
               onClick={() =>
-                alert('해당 기능은 로그인 후 이용하실 수 있습니다.')
+                alert("해당 기능은 로그인 후 이용하실 수 있습니다.")
               }
               className="ml-2 cursor-not-allowed rounded bg-gray-500 px-4 py-2 font-semibold text-white opacity-50"
             >
@@ -95,40 +95,40 @@ function Header() {
             <button
               onClick={() => requireAuth(() => setShowFortune(true))}
               className="rounded px-4 py-2 font-semibold text-white transition-colors hover:brightness-90"
-              style={{ backgroundColor: 'rgb(251, 80, 82)' }}
+              style={{ backgroundColor: "rgb(251, 80, 82)" }}
             >
               오늘의 운세
             </button>
           ) : (
             <button
               onClick={() =>
-                alert('해당 기능은 로그인 후 이용하실 수 있습니다.')
+                alert("해당 기능은 로그인 후 이용하실 수 있습니다.")
               }
               className="rounded px-4 py-2 font-semibold text-white transition-colors hover:brightness-90"
-              style={{ backgroundColor: 'rgb(255, 183, 185)' }}
+              style={{ backgroundColor: "rgb(255, 183, 185)" }}
             >
               오늘의 운세
             </button>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-1 justify-end">
           {auth.user ? (
-            <>
+            <div className="flex flex-row items-center gap-2">
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 안녕하세요, {auth.user.mid}님!
               </span>
-              {localStorage.setItem('userMid', auth.user.mid)}
               <button
                 onClick={() => {
                   dispatch(clearCredentials());
-                  localStorage.removeItem('userMid');
-                  navigate('/weather-app-vite/');
+                  localStorage.removeItem("userMid");
+                  navigate("/weather-app-vite/");
                 }}
                 className="rounded-lg px-4 py-2 text-neutral-500 hover:bg-neutral-200 hover:dark:bg-neutral-800"
               >
                 로그아웃
               </button>
-            </>
+              <ThemeSwitchToggle />
+            </div>
           ) : (
             <>
               <button
@@ -143,9 +143,9 @@ function Header() {
               >
                 회원가입
               </button>
+              <ThemeSwitchToggle />
             </>
           )}
-          <ThemeSwitchToggle />
         </div>
       </nav>
 
@@ -153,9 +153,9 @@ function Header() {
         <Link to="/weather-app-vite/">
           <button
             className={`rounded-lg px-4 py-2 ${
-              location === '/weather-app-vite/' || location === '/'
-                ? 'bg-neutral-200 dark:bg-neutral-800'
-                : 'hover:bg-neutral-200 hover:dark:bg-neutral-800'
+              location === "/weather-app-vite/" || location === "/"
+                ? "bg-neutral-200 dark:bg-neutral-800"
+                : "hover:bg-neutral-200 hover:dark:bg-neutral-800"
             }`}
           >
             오늘의날씨
@@ -165,9 +165,9 @@ function Header() {
         <Link to="forecast">
           <button
             className={`rounded-lg px-4 py-2 ${
-              location.includes('forecast')
-                ? 'bg-neutral-200 dark:bg-neutral-800'
-                : 'hover:bg-neutral-200 hover:dark:bg-neutral-800'
+              location.includes("forecast")
+                ? "bg-neutral-200 dark:bg-neutral-800"
+                : "hover:bg-neutral-200 hover:dark:bg-neutral-800"
             }`}
           >
             앞으로 5일
@@ -178,15 +178,15 @@ function Header() {
           onClick={(e) => {
             if (!auth.user) {
               e.preventDefault();
-              alert('해당 기능은 로그인 후 이용하실 수 있습니다.');
+              alert("해당 기능은 로그인 후 이용하실 수 있습니다.");
             }
           }}
         >
           <button
             className={`rounded-lg px-4 py-2 ${
-              location.includes('favorite')
-                ? 'bg-neutral-200 dark:bg-neutral-800'
-                : 'hover:bg-neutral-200 hover:dark:bg-neutral-800'
+              location.includes("favorite")
+                ? "bg-neutral-200 dark:bg-neutral-800"
+                : "hover:bg-neutral-200 hover:dark:bg-neutral-800"
             }`}
           >
             즐겨찾기
