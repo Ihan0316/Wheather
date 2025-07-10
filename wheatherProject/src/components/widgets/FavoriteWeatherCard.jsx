@@ -1,7 +1,7 @@
-import { useGetCurrentWeatherQuery } from '../../services/WeatherAPI';
-import WeatherIcon from '../common/WeatherIcon';
-import { TiLocationArrow } from 'react-icons/ti';
-import axios from 'axios';
+import { useGetCurrentWeatherQuery } from "../../services/WeatherAPI";
+import WeatherIcon from "../common/WeatherIcon";
+import { TiLocationArrow } from "react-icons/ti";
+import axios from "axios";
 
 function FavoriteWeatherCard({
   lat,
@@ -19,29 +19,20 @@ function FavoriteWeatherCard({
   function convertToDate(timezone, dt) {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
-    return local_time.toLocaleString('ko-KR', {
-      timeZone: 'UTC',
-      weekday: 'long',
-    });
-  }
-
-  function convertToHMin(dt) {
-    return new Date(dt * 1000).toLocaleTimeString('ko-KR', {
-      timeZone: 'UTC',
-      hour12: true,
-      hour: 'numeric',
-      minute: 'numeric',
+    return local_time.toLocaleString("ko-KR", {
+      timeZone: "UTC",
+      weekday: "long",
     });
   }
 
   function getLocalTime(timezone, dt) {
     let utc_time = new Date(dt * 1000);
     let local_time = new Date(utc_time.getTime() + timezone * 1000);
-    return local_time.toLocaleTimeString('ko-KR', {
-      timeZone: 'UTC',
+    return local_time.toLocaleTimeString("ko-KR", {
+      timeZone: "UTC",
       hour12: true,
-      hour: 'numeric',
-      minute: 'numeric',
+      hour: "numeric",
+      minute: "numeric",
     });
   }
 
@@ -50,9 +41,9 @@ function FavoriteWeatherCard({
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
       // localStorage에서 'auth' 키로 저장된 JSON 파싱
-      const storedAuth = localStorage.getItem('auth');
+      const storedAuth = localStorage.getItem("auth");
       if (!storedAuth) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
         return;
       }
       const parsedAuth = JSON.parse(storedAuth);
@@ -60,7 +51,7 @@ function FavoriteWeatherCard({
       const userMid = parsedAuth.user?.mid;
 
       if (!token || !userMid) {
-        alert('로그인 정보가 올바르지 않습니다.');
+        alert("로그인 정보가 올바르지 않습니다.");
         return;
       }
 
@@ -77,15 +68,15 @@ function FavoriteWeatherCard({
         weatherData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
-        },
+        }
       );
 
-      if (response.data === '이미 등록된 즐겨찾기 도시입니다.') {
-        alert('이미 등록된 즐겨찾기 도시입니다.');
+      if (response.data === "이미 등록된 즐겨찾기 도시입니다.") {
+        alert("이미 등록된 즐겨찾기 도시입니다.");
       } else {
         alert(`${data.name}이(가) 즐겨찾기에 추가되었습니다.`);
         // 즐겨찾기 추가 후 목록 새로고침
@@ -93,12 +84,12 @@ function FavoriteWeatherCard({
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
       } else if (error.response && error.response.status === 403) {
-        alert('권한이 없습니다. 다시 로그인해 주세요.');
+        alert("권한이 없습니다. 다시 로그인해 주세요.");
       } else {
-        console.error('저장 실패:', error);
-        alert('즐겨찾기 추가 중 오류가 발생했습니다.');
+        console.error("저장 실패:", error);
+        alert("즐겨찾기 추가 중 오류가 발생했습니다.");
       }
     }
   };
@@ -107,9 +98,9 @@ function FavoriteWeatherCard({
   const deleteFavorite = async () => {
     const SERVER_URL = import.meta.env.VITE_MARIADB_SET;
     try {
-      const storedAuth = localStorage.getItem('auth');
+      const storedAuth = localStorage.getItem("auth");
       if (!storedAuth) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
         return;
       }
       const parsedAuth = JSON.parse(storedAuth);
@@ -117,7 +108,7 @@ function FavoriteWeatherCard({
 
       await axios.delete(`${SERVER_URL}/api/weather/${id}`, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
@@ -126,12 +117,12 @@ function FavoriteWeatherCard({
       setWeather((prevWeather) => prevWeather.filter((city) => city.id !== id));
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
       } else if (error.response && error.response.status === 403) {
-        alert('권한이 없습니다. 다시 로그인해 주세요.');
+        alert("권한이 없습니다. 다시 로그인해 주세요.");
       } else {
-        console.error('삭제 실패:', error);
-        alert('삭제 중 오류가 발생했습니다.');
+        console.error("삭제 실패:", error);
+        alert("삭제 중 오류가 발생했습니다.");
       }
     }
   };
