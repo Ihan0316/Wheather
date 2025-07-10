@@ -198,9 +198,7 @@ function OtherCities() {
                       className="flex flex-col gap-4 rounded-lg p-4 transition-colors"
                       style={{ width: "100%", maxWidth: "22rem", minWidth: 0 }}
                     >
-                      {isLoading ? (
-                        <div className="p-4 text-center">로딩 중...</div>
-                      ) : isError ? (
+                      {isError ? (
                         <div className="p-4 text-center text-red-500">
                           날씨 정보를 불러올 수 없습니다
                         </div>

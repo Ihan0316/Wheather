@@ -34,7 +34,7 @@ function App() {
       {/* 플로팅 버튼 추가 */}
       <div className="fixed bottom-8 right-8 z-50">
         <button
-          className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-500 text-3xl text-white shadow-lg hover:bg-blue-600 focus:outline-none"
+          className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500 text-3xl text-white shadow-lg hover:bg-blue-600 focus:outline-none"
           onClick={scrollToTop} // 클릭 시 맨 위로 스크롤
         >
           ↑
