@@ -1,65 +1,96 @@
-# 날씨 앱 ✨
+# 🌈 Wheather_Mate
 
-React와 Vite로 제작된 간단한 날씨 애플리케이션입니다. 사용자가 도시를 검색하여 해당 지역의 현재 날씨 상태를 확인할 수 있습니다.
+> **Vite 기반의 고성능 실시간 도시별 날씨 검색 웹 서비스**  
+> 🔗 [배포 링크] | 📄 [Notion 문서](https://www.notion.so/Wheather_Mate-2df87486686f81638932d4b3b2230e6e)
 
-## 제작 기간
-2025.01.20 ~ 2025.02.12
+<br>
 
-## 주요 기능
+## 📖 프로젝트 소개 (About)
 
-- 도시 이름으로 날씨 정보 검색
-- 온도, 습도, 풍속 등 현재 날씨 정보 확인
-- 선택한 지역의 5일 예보 확인
-- Chart.js를 사용한 향후 6시간 동안의 강수 확률 차트 보기
+**Wheather_Mate**는 React와 Vite로 제작된 빠르고 직관적인 날씨 애플리케이션입니다.  
+사용자가 원하는 도시를 검색하여 해당 지역의 현재 날씨 상태를 실시간으로 확인하고 관리할 수 있습니다.
 
-## 사용된 라이브러리
+- **제작 기간:** 2025.01.20 ~ 2025.02.12
+- **참여 인원:** 5명 (팀장)
+- **주요 역할:**
+    - 프로젝트 총괄 및 Git 관리
+    - UI/UX 초안 작성 및 프론트엔드 개발
+    - 현재 위치 호출 및 실시간 날씨 API 연동
 
-이 프로젝트는 다음과 같은 라이브러리를 사용합니다:
+<br>
 
-### 프론트엔드 🎨
+## ✨ 주요 기능 (Key Features)
 
-- tailwind CSS - 유틸리티 우선 CSS 프레임워크
-- react-redux - React에서 Redux를 사용하기 위한 바인딩 제공
-- reduxjs/toolkit - Redux 사용 사례를 단순화하는 유틸리티 제공
-- react-router-dom - React Router를 위한 DOM 바인딩
-- axios - 브라우저를 위한 Promise 기반 HTTP 클라이언트
-- chart.js - 다양한 차트 유형을 만들 수 있는 유연한 JavaScript 차트 라이브러리
-- classnames - 클래스명을 조건부로 결합하는 JavaScript 유틸리티
-- react-icons - React 프로젝트를 위한 무료 아이콘 세트
+- **🔍 실시간 날씨 검색:** 도시 이름으로 전 세계 날씨 정보 조회
+- **📍 현재 위치 기반 날씨:** 사용자의 GPS 정보를 활용한 자동 날씨 추천
+- **💾 즐겨찾기:** 자주 찾는 도시 저장 및 관리 (ERD: `favorite_weather`)
+- **📊 사용자 관리:** 회원가입/로그인 및 MBTI/성별 기반 맞춤형 데이터 관리 (ERD: `api_user`)
 
-### 백엔드 ⚒️
+<br>
 
-- Github Pages
-- Spring Boot
+## 🛠 기술 스택 (Tech Stack)
 
-### 사용된 API
+| 구분 | 스택 |
+| :-- | :-- |
+| **Frontend** | ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=Vite&logoColor=white) |
+| **Backend** | (e.g. Node.js, Express) |
+| **Database** | (e.g. MySQL) |
+| **Design** | ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=Figma&logoColor=white) |
+| **Collaboration** | ![Notion](https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=Git&logoColor=white) |
 
-이 프로젝트는 다음과 같은 API들을 사용합니다:
+<br>
 
-- OpenWeather API - 특정 위치의 날씨 데이터 및 지도 레이어 제공
-- OpenMeteo API - 특정 위치의 자외선 지수 데이터 제공
+## 🏗 아키텍처 및 설계 (Architecture & Design)
 
-## 설치 방법
+### ERD (Entity Relationship Diagram)
+- **Users (`api_user`)**: 사용자 정보, MBTI, 성별 등
+- **Favorites (`favorite_weather`)**: 즐겨찾는 날씨 정보 (도시, 위도/경도)
 
-이 애플리케이션을 로컬에서 실행하려면 React-vite가 설치되어 있어야 합니다. 이 저장소를 클론한 후, 프로젝트 디렉토리(Wheather Project)로 이동하여 다음 명령어를 실행하세요:
+```mermaid
+erDiagram
+    api_user ||--o{ favorite_weather : "mid"
+    api_user {
+        bigint id PK
+        varchar mid UK
+        varchar mpw
+        varchar name
+        date birthdate
+        varchar mbti
+        varchar gender
+    }
+    favorite_weather {
+        bigint id PK
+        varchar mid FK
+        varchar country
+        varchar city
+        double latitude
+        double longitude
+        datetime created_at
+    }
+```
 
-- yarn
-- yarn dev
+### API 명세서
+- 상세 API 명세는 [Google Docs 링크](https://docs.google.com/document/d/10xTiPFXgw7_SGE0AvhJ2OuKYzbrHXL_TP_xOV4JAUgg/edit?usp=sharing)에서 확인할 수 있습니다.
 
-Docker 실행 후, 
-서버(Wheather Back)로 이동 후 실행을 하면, DB가 생성됩니다.
+<br>
 
-이렇게 하면 필요한 종속성이 설치되고 로컬 개발 서버가 시작됩니다.
+## 💭 회고 (Retrospective)
 
-** api 키는 개별 발급 부탁드립니다.
-https://openweathermap.org/appid
+- **[Notion 회고록 링크]** (상세 내용은 링크 참조)
+- **배운 점:** React와 Vite 환경에서의 API 연동 및 상태 관리 최적화 경험
+- **아쉬운 점:** (e.g. 모바일 환경에서의 일부 UI 호환성 개선 필요)
 
-최상단 폴더에, .env파일 생성 후, YOUR API KEY부분에 api 키 입력
-VITE_API_KEY_OPENWEATHERMAP=YOUR API KEY
-VITE_MARIADB_SET=http://localhost:8080
+<br>
 
+## 💻 설치 및 실행 (Installation)
 
-## 사용 방법
+```bash
+# 1. Clone the repository
+git clone https://github.com/Ihan0316/Wheather.git
 
-이 애플리케이션을 사용하려면 검색창에 도시 이름을 입력하고 "Enter" 키를 누르면 됩니다. 해당 도시의 현재 날씨 상태가 표시됩니다.
-또한 로그인 후 이용하시면, 오늘의 운세 기능, 즐겨찾기 기능도 이용하실 수 있습니다.
+# 2. Install dependencies
+npm install
+
+# 3. Start development server
+npm run dev
+```
