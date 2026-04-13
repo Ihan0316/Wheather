@@ -24,10 +24,24 @@
       crossorigin=""
     ></script>
     <script src="http://unpkg.com/leaflet@latest/dist/leaflet.js"></script>
-    <script
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBXE7229fuXG0D5UkaOWMoGgFhwU2QgA&amp;libraries=places&amp;callback=Function.prototype&loading=async"
-    ></script>
+    <script src="/local-config.js"></script>
+    <script>
+      (function () {
+        const key = window.APP_CONFIG && window.APP_CONFIG.googleMapsApiKey;
+        if (!key) {
+          console.warn("Google Maps API key is not configured.");
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.defer = true;
+        script.src =
+          "https://maps.googleapis.com/maps/api/js?key=" +
+          encodeURIComponent(key) +
+          "&libraries=places&callback=Function.prototype&loading=async";
+        document.head.appendChild(script);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
